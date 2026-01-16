@@ -48,90 +48,98 @@ Postman - API testing
 Morgan - HTTP request logging
 
 Cors - Cross-origin resource sharing
-
-📁 Project Structure
-text
-backend/
-├── src/
-│   ├── app/
-│   │   ├── middleware/
-│   │   │   ├── auth.middleware.ts      
-│   │   │   ├── error.middleware.ts     
-│   │   │   ├── validate.middleware.ts  
-│   │   │   └── upload.middleware.ts    
-│   │   │
-│   │   ├── modules/
-│   │   │   ├── auth/
-│   │   │   │   ├── auth.controller.ts
-│   │   │   │   ├── auth.service.ts
-│   │   │   │   ├── auth.route.ts
-│   │   │   │   └── auth.validation.ts
-│   │   │   │
-│   │   │   ├── user/
-│   │   │   │   ├── user.controller.ts
-│   │   │   │   ├── user.service.ts
-│   │   │   │   ├── user.route.ts
-│   │   │   │   ├── user.validation.ts
-│   │   │   │   └── user.interface.ts
-│   │   │   │
-│   │   │   ├── listing/
-│   │   │   │   ├── listing.controller.ts
-│   │   │   │   ├── listing.service.ts
-│   │   │   │   ├── listing.route.ts
-│   │   │   │   ├── listing.validation.ts
-│   │   │   │   └── listing.interface.ts
-│   │   │   │
-│   │   │   ├── booking/
-│   │   │   │   ├── booking.controller.ts
-│   │   │   │   ├── booking.service.ts
-│   │   │   │   ├── booking.route.ts
-│   │   │   │   ├── booking.validation.ts
-│   │   │   │   └── booking.interface.ts
-│   │   │   │
-│   │   │   ├── review/
-│   │   │   │   ├── review.controller.ts
-│   │   │   │   ├── review.service.ts
-│   │   │   │   ├── review.route.ts
-│   │   │   │   ├── review.validation.ts
-│   │   │   │   └── review.interface.ts
-│   │   │   │
-│   │   │   └── payment/
-│   │   │       ├── payment.controller.ts
-│   │   │       ├── payment.service.ts
-│   │   │       ├── payment.route.ts
-│   │   │       └── payment.interface.ts
-│   │   │
-│   │   ├── config/
-│   │   │   ├── database.ts      
-│   │   │   ├── cloudinary.ts     
-│   │   │   └── constants.ts      
-│   │   │
-│   │   ├── utils/
-│   │   │   ├──  ...
-│   │   │
-│   │   ├── models/
-│   │   │   ├── User.model.ts
-│   │   │   ├── Listing.model.ts
-│   │   │   ├── Booking.model.ts
-│   │   │   ├── Review.model.ts
-│   │   │   └── Payment.model.ts
-│   │   │
-│   │   └── app.ts               
-│   │   └── server.ts            
+src/
+├── 📂 app/                          # Application core
+│   ├── 📂 config/                   # Configuration files
+│   │   ├── 📄 database.ts           # Database connection
+│   │   ├── 📄 cloudinary.ts         # Cloudinary configuration
+│   │   ├── 📄 constants.ts          # Application constants
+│   │   └── 📄 index.ts              # Config exports
 │   │
-│   ├── types/
-│   │   └── express/
-│   │       └── index.d.ts       
+│   ├── 📂 middleware/               # Express middleware
+│   │   ├── 📄 auth.middleware.ts    # Authentication middleware
+│   │    
+│   │    
+│   │    
+│   │    
 │   │
-│   └── tests/
-│       ├──  ...
+│   ├── 📂 modules/                  # Feature modules
+│   │   ├── 📂 auth/                 # Authentication module
+│   │   │   ├── 📄 auth.controller.ts
+│   │   │   ├── 📄 auth.service.ts
+│   │   │   ├── 📄 auth.route.ts
+│   │   │   ├── 📄 auth.validation.ts
+│   │   │   ├── 📄 auth.interface.ts
+│   │   │    
+│   │   │
+│   │   ├── 📂 user/                 # User management
+│   │   │   ├── 📄 user.controller.ts
+│   │   │   ├── 📄 user.service.ts
+│   │   │   ├── 📄 user.route.ts
+│   │   │   ├── 📄 user.validation.ts
+│   │   │   ├── 📄 user.interface.ts
+│   │   │    
+│   │   │
+│   │   ├── 📂 listing/              # Tour listings
+│   │   │   ├── 📄 listing.controller.ts
+│   │   │   ├── 📄 listing.service.ts
+│   │   │   ├── 📄 listing.route.ts
+│   │   │   ├── 📄 listing.validation.ts
+│   │   │   ├── 📄 listing.interface.ts
+│   │   │    
+│   │   │
+│   │   ├── 📂 booking/              # Booking system
+│   │   │   ├── 📄 booking.controller.ts
+│   │   │   ├── 📄 booking.service.ts
+│   │   │   ├── 📄 booking.route.ts
+│   │   │   ├── 📄 booking.validation.ts
+│   │   │   ├── 📄 booking.interface.ts
+│   │   │    
+│   │   │
+│   │   ├── 📂 review/               # Reviews & ratings
+│   │   │   ├── 📄 review.controller.ts
+│   │   │   ├── 📄 review.service.ts
+│   │   │   ├── 📄 review.route.ts
+│   │   │   ├── 📄 review.validation.ts
+│   │   │   ├── 📄 review.interface.ts
+│   │   │   
+│   │   │
+│   │   └── 📂 payment/              # Payment processing
+│   │       ├── 📄 payment.controller.ts
+│   │       ├── 📄 payment.service.ts
+│   │       ├── 📄 payment.route.ts
+│   │       ├── 📄 payment.validation.ts
+│   │       ├── 📄 payment.interface.ts
+│   │       
+│   │
+│   ├── 📂 utils/                    # Utility functions
+│   │   ├── 📄  ...
+│   │    
+│   │   
+│   │    
+│   │    
+│   │   
+│   │    
+│   │
+│   ├── 📂 models/                   # Mongoose models
+│   │   ├── 📄 User.model.ts
+│   │   ├── 📄 Listing.model.ts
+│   │   ├── 📄 Booking.model.ts
+│   │   ├── 📄 Review.model.ts
+│   │   ├── 📄 Payment.model.ts
+│   │    
+│   │
+│   ├── 📂 routes/                   # Route aggregator
+│   │   └── 📄 index.ts
+│   │
+│   ├── 📄 app.ts                    # Express app configuration
+│   └── 📄 server.ts                 # Server entry point
 │
-├── .env.example
-├── .gitignore
-├── package.json
-├── tsconfig.json
-├── eslint.config.js
-└── README.md
+├── 📂 types/                        # TypeScript type definitions
+│   └── 📂 express/
+│       └── 📄 index.d.ts            # Express type extensions
+│
+└── 📄 index.ts                      # Main entry point (optional)
 🌐 API Documentation
 Base URL
 text
