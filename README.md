@@ -1,151 +1,149 @@
-📖 Overview
-Local Guide Platform is a comprehensive backend system that connects travelers with local guides for authentic travel experiences. The platform enables guides to create and manage tour listings while allowing tourists to discover, book, and review these experiences.
+# 🗺️ Local Guide Platform - Backend API
 
-✨ Key Features
-🔐 JWT-based Authentication with role-based access control
+ ## 🎯 Overview
 
-👥 Multi-role System (Tourist, Guide, Admin)
+**Local Guide Platform** is a comprehensive backend API that connects travelers with local guides for authentic travel experiences. The platform enables guides to create and manage tour listings while allowing tourists to discover, book, and review these experiences.
 
-🏷️ Tour Listing Management with images and categories
+### 🌟 Why Choose Local Guide?
 
-📅 Booking System with status tracking
+- **For Travelers**: Discover authentic local experiences beyond typical tourist spots
+- **For Guides**: Monetize local knowledge and expertise
+- **For Communities**: Promote cultural exchange and sustainable tourism
+- **Trust & Safety**: Verified profiles, secure payments, and review system
 
-⭐ Review & Rating System
+## ✨ Features
 
-🔍 Advanced Search & Filtering
+### 🔐 Authentication & Authorization
+- JWT-based authentication with refresh tokens
+- Role-based access control (Tourist, Guide, Admin)
+- Secure password hashing with bcrypt
+- Email verification system
+- Social login integration ready
 
-💳 Payment Integration Ready
+### 👥 User Management
+- Multi-role user system
+- Profile management with images
+- Guide-specific fields (expertise, rates, availability)
+- Tourist-specific preferences
+- Admin dashboard for user management
 
-📱 RESTful API Design
+### 🏷️ Tour Listings
+- Create, read, update, delete tour listings
+- Multiple categories (Food, Nature, History, Art, Adventure)
+- Image upload support (Cloudinary)
+- Pricing and duration management
+- Location-based listings
 
-🛠️ Tech Stack
-Backend
-Node.js - Runtime environment
+### 📅 Booking System
+- Real-time booking requests
+- Booking status tracking (Pending, Confirmed, Completed, Cancelled)
+- Calendar-based availability
+- Group size management
+- Automated notifications
 
-Express.js - Web framework
+### ⭐ Reviews & Ratings
+- Post-tour reviews and ratings
+- Guide rating system (1-5 stars)
+- Verified reviews only
+- Review moderation
+- Average rating calculations
 
-TypeScript - Type safety
+### 🔍 Advanced Search
+- Filter by location, price, category, date
+- Language-based filtering
+- Guide expertise matching
+- Popularity and rating sorting
+- Pagination and sorting
 
-MongoDB - Database
+### 💳 Payment Integration
+- Stripe payment gateway ready
+- Secure payment processing
+- Booking confirmation emails
+- Refund management
+- Transaction history
 
-Mongoose - ODM
+## 🛠️ Tech Stack
 
-JWT - Authentication
+**Backend:**
+- **Node.js** - JavaScript runtime
+- **Express.js** - Web framework
+- **TypeScript** - Type safety
+- **MongoDB** - NoSQL database
+- **Mongoose** - ODM for MongoDB
 
-Bcrypt - Password hashing
+**Authentication & Security:**
+- **JWT** - JSON Web Tokens
+- **Bcrypt** - Password hashing
+- **Cors** - Cross-origin resource sharing
+- **Helmet** - Security headers
 
-Zod - Schema validation
+**Validation & Utilities:**
+- **Zod** - Schema validation
+- **Multer** - File uploads
+- **Nodemailer** - Email service
+- **Cloudinary** - Image storage
+- **Morgan** - HTTP request logger
 
-Multer - File uploads
+**Development Tools:**
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
+- **Nodemon** - Development server
+- **Postman** - API testing
 
-Development Tools
-Nodemon - Development server
+## 🚀 Quick Start
 
-ESLint & Prettier - Code quality
+### Prerequisites
+- Node.js (v18 or higher)
+- MongoDB (v6 or higher)
+- npm or yarn package manager
 
-Postman - API testing
+### Installation Steps
 
-Morgan - HTTP request logging
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/local-guide-backend.git
+cd local-guide-backend
+Install dependencies
 
-Cors - Cross-origin resource sharing
-src/
-├── 📂 app/                          # Application core
-│   ├── 📂 config/                   # Configuration files
-│   │   ├── 📄 database.ts           # Database connection
-│   │   ├── 📄 cloudinary.ts         # Cloudinary configuration
-│   │   ├── 📄 constants.ts          # Application constants
-│   │   └── 📄 index.ts              # Config exports
-│   │
-│   ├── 📂 middleware/               # Express middleware
-│   │   ├── 📄 auth.middleware.ts    # Authentication middleware
-│   │    
-│   │    
-│   │    
-│   │    
-│   │
-│   ├── 📂 modules/                  # Feature modules
-│   │   ├── 📂 auth/                 # Authentication module
-│   │   │   ├── 📄 auth.controller.ts
-│   │   │   ├── 📄 auth.service.ts
-│   │   │   ├── 📄 auth.route.ts
-│   │   │   ├── 📄 auth.validation.ts
-│   │   │   ├── 📄 auth.interface.ts
-│   │   │    
-│   │   │
-│   │   ├── 📂 user/                 # User management
-│   │   │   ├── 📄 user.controller.ts
-│   │   │   ├── 📄 user.service.ts
-│   │   │   ├── 📄 user.route.ts
-│   │   │   ├── 📄 user.validation.ts
-│   │   │   ├── 📄 user.interface.ts
-│   │   │    
-│   │   │
-│   │   ├── 📂 listing/              # Tour listings
-│   │   │   ├── 📄 listing.controller.ts
-│   │   │   ├── 📄 listing.service.ts
-│   │   │   ├── 📄 listing.route.ts
-│   │   │   ├── 📄 listing.validation.ts
-│   │   │   ├── 📄 listing.interface.ts
-│   │   │    
-│   │   │
-│   │   ├── 📂 booking/              # Booking system
-│   │   │   ├── 📄 booking.controller.ts
-│   │   │   ├── 📄 booking.service.ts
-│   │   │   ├── 📄 booking.route.ts
-│   │   │   ├── 📄 booking.validation.ts
-│   │   │   ├── 📄 booking.interface.ts
-│   │   │    
-│   │   │
-│   │   ├── 📂 review/               # Reviews & ratings
-│   │   │   ├── 📄 review.controller.ts
-│   │   │   ├── 📄 review.service.ts
-│   │   │   ├── 📄 review.route.ts
-│   │   │   ├── 📄 review.validation.ts
-│   │   │   ├── 📄 review.interface.ts
-│   │   │   
-│   │   │
-│   │   └── 📂 payment/              # Payment processing
-│   │       ├── 📄 payment.controller.ts
-│   │       ├── 📄 payment.service.ts
-│   │       ├── 📄 payment.route.ts
-│   │       ├── 📄 payment.validation.ts
-│   │       ├── 📄 payment.interface.ts
-│   │       
-│   │
-│   ├── 📂 utils/                    # Utility functions
-│   │   ├── 📄  ...
-│   │    
-│   │   
-│   │    
-│   │    
-│   │   
-│   │    
-│   │
-│   ├── 📂 models/                   # Mongoose models
-│   │   ├── 📄 User.model.ts
-│   │   ├── 📄 Listing.model.ts
-│   │   ├── 📄 Booking.model.ts
-│   │   ├── 📄 Review.model.ts
-│   │   ├── 📄 Payment.model.ts
-│   │    
-│   │
-│   ├── 📂 routes/                   # Route aggregator
-│   │   └── 📄 index.ts
-│   │
-│   ├── 📄 app.ts                    # Express app configuration
-│   └── 📄 server.ts                 # Server entry point
-│
-├── 📂 types/                        # TypeScript type definitions
-│   └── 📂 express/
-│       └── 📄 index.d.ts            # Express type extensions
-│
-└── 📄 index.ts                      # Main entry point (optional)
-🌐 API Documentation
+bash
+npm install
+# or
+yarn install
+Configure environment variables
+
+bash
+cp .env.example .env
+# Edit .env file with your configuration
+Start MongoDB
+
+bash
+# For Windows
+net start MongoDB
+
+# For macOS
+brew services start mongodb-community
+
+# For Linux
+sudo systemctl start mongod
+Run the application
+
+bash
+# Development mode
+npm run dev
+
+# Production mode
+npm run build
+npm start
+Access the API
+
+text
+Server running on: http://localhost:5000
+API Documentation: http://localhost:5000/api/v1/docs
+📚 API Documentation
 Base URL
 text
 http://localhost:5000/api/v1
-📊 API Endpoints Summary
-🔐 Authentication
+Authentication Endpoints
 Method	Endpoint	Description	Auth Required
 POST	/auth/register	Register new user	
 POST	/auth/login	Login user	
@@ -153,40 +151,71 @@ POST	/auth/refresh-token	Refresh access token
 POST	/auth/logout	Logout user	
 POST	/auth/forgot-password	Request password reset	
 POST	/auth/reset-password	Reset password	
-👤 User Management
-Method	Endpoint	Description	Auth Required	Role
-GET	/users/profile	Get current user profile		All
-PATCH	/users/profile	Update user profile		All
-GET	/users/:id	Get public user profile		-
-GET	/users	Get all users (Admin)		Admin
-PATCH	/users/:id	Update any user (Admin)		Admin
-DELETE	/users/:id	Delete user (Admin)		Admin
-🏷️ Listing Management
-Method	Endpoint	Description	Auth Required	Role
-GET	/listings	Get all listings		-
-GET	/listings/:id	Get listing details		-
-POST	/listings	Create new listing		Guide
-PATCH	/listings/:id	Update listing		Guide/Admin
-DELETE	/listings/:id	Delete listing		Guide/Admin
-GET	/listings/guide/my-listings	Get guide's listings		Guide
-GET	/listings/search	Search listings		-
-📅 Booking System
-Method	Endpoint	Description	Auth Required	Role
-POST	/bookings	Create booking request		Tourist
-GET	/bookings/:id	Get booking details		Tourist/Guide
-PATCH	/bookings/:id/status	Update booking status		Guide
-GET	/bookings/user/my-bookings	Get user bookings		Tourist
-GET	/bookings/guide/my-bookings	Get guide bookings		Guide
-DELETE	/bookings/:id	Cancel booking		Tourist
-⭐ Reviews & Ratings
-Method	Endpoint	Description	Auth Required	Role
-POST	/reviews	Create review		Tourist
-GET	/reviews/listing/:id	Get listing reviews		-
-GET	/reviews/guide/:id	Get guide reviews		-
-PATCH	/reviews/:id	Update review		Tourist
-DELETE	/reviews/:id	Delete review		Tourist/Admin
-🔧 Environment Variables
-Create a .env file in the root directory:
+User Management Endpoints
+Method	Endpoint	Description	Role
+GET	/users/profile	Get current profile	All
+PATCH	/users/profile	Update profile	All
+GET	/users/:id	Get public profile	-
+GET	/users	Get all users	Admin
+PATCH	/users/:id	Update user	Admin
+DELETE	/users/:id	Delete user	Admin
+Listing Management Endpoints
+Method	Endpoint	Description	Role
+GET	/listings	Get all listings	-
+GET	/listings/:id	Get listing details	-
+POST	/listings	Create listing	Guide
+PATCH	/listings/:id	Update listing	Guide/Admin
+DELETE	/listings/:id	Delete listing	Guide/Admin
+GET	/listings/search	Search listings	-
+GET	/listings/guide/my-listings	 Guide's listings	Guide
+Booking Endpoints
+Method	Endpoint	Description	Role
+POST	/bookings	Create booking	Tourist
+GET	/bookings/:id	Get booking	Tourist/Guide
+PATCH	/bookings/:id/status	Update status	Guide
+GET	/bookings/user/my-bookings	User bookings	Tourist
+GET	/bookings/guide/my-bookings	Guide bookings	Guide
+DELETE	/bookings/:id	Cancel booking	Tourist
+Review Endpoints
+Method	Endpoint	Description	Role
+POST	/reviews	Create review	Tourist
+GET	/reviews/listing/:id	Listing reviews	-
+GET	/reviews/guide/:id	Guide reviews	-
+PATCH	/reviews/:id	Update review	Tourist
+DELETE	/reviews/:id	Delete review	Tourist/Admin
+📁 Project Structure
+text
+local-guide-backend/
+├── src/
+│   ├── app/
+│   │   ├── config/          # Configuration files
+│   │   ├── middleware/      # Express middleware
+│   │   ├── modules/         # Feature modules
+│   │   ├── utils/          # Utility functions
+│   │   ├── models/         # Database models
+│   │   ├── routes/         # Route aggregator
+│   │   ├── app.ts         # Express app config
+│   │   └── server.ts      # Server entry point
+│   ├── types/             # TypeScript types
+│   └── tests/            # Test files
+├── .env.example          # Environment template
+├── .env                  # Environment variables
+├── package.json         # Dependencies
+├── tsconfig.json        # TypeScript config
+└── README.md           # This file
+Module Structure
+Each module follows this pattern:
+
+text
+modules/auth/
+├── auth.controller.ts    # Request handling
+├── auth.service.ts      # Business logic
+├── auth.route.ts        # Route definitions
+├── auth.validation.ts   # Zod schemas
+├── auth.interface.ts    # TypeScript interfaces
+└── index.ts            # Module exports
+⚙️ Environment Variables
+Create a .env file with the following variables:
 
 env
 # Server Configuration
@@ -199,9 +228,9 @@ FRONTEND_URL=http://localhost:3000
 MONGODB_URI=mongodb://localhost:27017/local-guide
 DB_NAME=local-guide
 
-# JWT
-JWT_ACCESS_SECRET=your-access-secret-key-here
-JWT_REFRESH_SECRET=your-refresh-secret-key-here
+# JWT Authentication
+JWT_ACCESS_SECRET=your-access-secret-key-min-32-chars
+JWT_REFRESH_SECRET=your-refresh-secret-key-min-32-chars
 JWT_ACCESS_EXPIRES_IN=15m
 JWT_REFRESH_EXPIRES_IN=7d
 
@@ -209,69 +238,11 @@ JWT_REFRESH_EXPIRES_IN=7d
 COOKIE_SECRET=your-cookie-secret
 COOKIE_EXPIRES_IN=7
 
-# Cloudinary (For Image Uploads)
+ 
+
+# Cloudinary (Optional)
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 
-# Payment Gateway (Stripe)
-STRIPE_SECRET_KEY=your-stripe-secret-key
-STRIPE_PUBLISHABLE_KEY=your-stripe-publishable-key
-STRIPE_WEBHOOK_SECRET=your-stripe-webhook-secret
-
-# Email Service (Nodemailer)
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASS=your-app-password
-FROM_EMAIL=noreply@localguide.com
-FROM_NAME=Local Guide Platform
-🚀 Installation & Setup
-Prerequisites
-Node.js (v18 or higher)
-
-MongoDB (v6 or higher)
-
-npm or yarn
-
-Step-by-Step Installation
-Clone the repository
-
-bash
-git clone <repository-url>
-cd local-guide-backend
-Install dependencies
-
-bash
-npm install
-# or
-yarn install
-Setup environment variables
-
-bash
-cp .env.example .env
-# Edit .env file with your configuration
-Start MongoDB
-
-bash
-# For macOS
-brew services start mongodb-community
-
-# For Windows (Run as Administrator)
-net start MongoDB
-
-# For Linux
-sudo systemctl start mongod
-Run the application
-
-Development mode:
-
-bash
-npm run dev
-# or
-yarn dev
-Production mode:
-
-bash
-npm run build
-npm start
+ 
