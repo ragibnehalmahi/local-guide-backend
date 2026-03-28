@@ -14,72 +14,70 @@ const LocationSchema = new Schema<IListingLocation>(
 
 const ListingSchema = new Schema<ListingDocument>(
   {
-    title: { 
-      type: String, 
-      required: true, 
+    title: {
+      type: String,
+      required: true,
       trim: true,
       minlength: 5,
       maxlength: 100
     },
-    description: { 
-      type: String, 
+    description: {
+      type: String,
       required: true,
       minlength: 20,
       maxlength: 1000
     },
-    price: { 
-      type: Number, 
+    price: {
+      type: Number,
       required: true,
       min: 1
     },
-    durationHours: { 
+    durationHours: {
       type: Number,
       required: true,
       min: 1,
       max: 24
     },
-    maxGroupSize: { 
+    maxGroupSize: {
       type: Number,
       required: true,
       min: 1,
       max: 20
     },
-    meetingPoint: { 
-      type: String, 
+    meetingPoint: {
+      type: String,
       required: true,
       maxlength: 200
     },
-    languages: [{ 
+    languages: [{
       type: String,
       required: true
     }],
-    category: { 
-      type: String, 
+    category: {
+      type: String,
       enum: Object.values(ListingCategory),
       required: true
     },
-    // images: [{ 
-    //   type: String,
-    //   validate: {
-    //     validator: (images: string[]) => images.length <= 5,
-    //     message: "Cannot upload more than 5 images"
-    //   }
-    // }],
-    location: { 
-      type: LocationSchema, 
-      required: true 
+    // Simple images array without extra validation to prevent Mongoose errors
+    images: [{
+      type: String,
+      required: true
+    }],
+    location: {
+      type: LocationSchema,
+      required: true
     },
-    guide: { 
-      type: Schema.Types.ObjectId, 
-      ref: "User", 
+    guide: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
       index: true
     },
-    active: { 
-      type: Boolean, 
-      default: true 
+    active: {
+      type: Boolean,
+      default: true
     },
-    availableDates: [{ 
+    availableDates: [{
       type: Date,
       default: []
     }]
@@ -94,4 +92,4 @@ ListingSchema.index({ guide: 1, active: 1 });
 ListingSchema.index({ category: 1, active: 1 });
 ListingSchema.index({ "location.city": 1, active: 1 });
 
-export const Listing = model<ListingDocument>("Listing", ListingSchema);
+export const Listing = model<ListingDocument>("Listing", ListingSchema);

@@ -9,7 +9,8 @@ import { BookingRouter } from '../modules/bookings/booking.route';
 import { ReviewRouter } from '../modules/reviews/review.route';
 import { PaymentRouter } from '../modules/payments/payment.route';
 import { TouristRoutes } from '../modules/tourist/tourist.routes';
-// import { ReviewRoutes } from '../modules/reviews/review.route';
+import { MetaRouter } from '../modules/meta/meta.routes';
+import EarningsRouter from '../modules/guide/earnings.route';
  
  const router = express.Router();
 
@@ -32,7 +33,8 @@ const moduleRoutes = [
    },
   {
     path: '/booking',
-    route: BookingRouter},
+    route: BookingRouter
+  },
   
    
   {
@@ -41,11 +43,18 @@ const moduleRoutes = [
   },{
     path:'/tourist',
     route:TouristRoutes
+  },{
+    path: '/meta',
+    route: MetaRouter
   },
 
 
 
    
+  {
+    path: '/earnings',
+    route: EarningsRouter
+  }
 ];
 
 moduleRoutes.forEach(route => router.use(route.path, route.route));

@@ -1,3 +1,4 @@
+ 
 // src/app/modules/auth/auth.service.ts
 
 import bcrypt from "bcryptjs";
@@ -134,6 +135,7 @@ const getNewAccessToken = async (refreshToken: string) => {
         email: user.email,
         role: user.role,
       },
+      // process.env.JWT_ACCESS_SECRET as string,
       process.env.JWT_ACCESS_SECRET as string,
       process.env.JWT_ACCESS_EXPIRES || "1h"
     );

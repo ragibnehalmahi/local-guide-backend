@@ -6,6 +6,8 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import bodyParser from "body-parser";
 import router from "./app/routes";
+import notFoundHandler from "./app/middlewares/notFoundHandler";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
  
 const createApp = (): Application => {
   const app = express();
@@ -53,11 +55,11 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
     res.json({ status: "ok" });
   });
 
-  // // Not found handler
-  // app.use(notFoundHandler);
+  // Not found handler
+  app.use(notFoundHandler);
 
-  // // Global error handler
-  // app.use(globalErrorHandler);
+  // Global error handler
+  app.use(globalErrorHandler);
 
   return app;
 };

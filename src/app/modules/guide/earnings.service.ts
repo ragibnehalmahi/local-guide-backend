@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import Booking from "@/models/booking.model";
+import { Booking } from "../bookings/booking.model";
 import { Types } from "mongoose";
-import { IGuideEarningsFilter } from "@/interfaces/earnings.interface";
-import { paginate } from "@/utils/pagination";
-import AppError from "@/utils/appError";
+import { IGuideEarningsFilter } from "./earnings.interface";
+import { paginate } from "../../utils/pagination";
+ 
 
 export class GuideEarningsService {
   static async getEarningsStats(guideId: string) {
-    const pipeline = [
+    const pipeline: any[] = [
       {
         $match: {
           guide: new Types.ObjectId(guideId),
@@ -119,7 +119,7 @@ export class GuideEarningsService {
       matchStage.status = filters.status;
     }
 
-    const pipeline = [
+    const pipeline: any[] = [
       { $match: matchStage },
       {
         $lookup: {
@@ -163,7 +163,7 @@ export class GuideEarningsService {
       },
       {
         $sort: {
-          "firstBooking": -1,
+          "firstBooking": -1 as const,
         },
       },
       {
@@ -208,7 +208,7 @@ export class GuideEarningsService {
 
     const groupBy = period === "month" ? { $month: "$updatedAt" } : { $month: "$updatedAt", $year: "$updatedAt" };
 
-    const pipeline = [
+    const pipeline: any[] = [
       { $match: match },
       {
         $group: {
@@ -217,7 +217,7 @@ export class GuideEarningsService {
           count: { $sum: 1 },
         },
       },
-      { $sort: { "_id": 1 } },
+      { $sort: { "_id": 1 as const } },
     ];
 
     const chartData = await Booking.aggregate(pipeline);

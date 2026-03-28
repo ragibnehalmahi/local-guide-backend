@@ -229,5 +229,191 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
     return booking.populate("listing guide tourist");
   }
 }
+ 
 
+ // Get all bookings for admin
+const getAllBookingsForAdmin = async () => {
+  // Get all bookings with populated data
+  const bookings = await Booking.find()
+    .populate({
+      path: "tourist",
+      select: "_id name email phone",
+    })
+    .populate({
+      path: "guide",
+      select: "_id name email phone",
+    })
+    .populate({
+      path: "listing",
+      select: "_id title price duration category",
+    })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  // Calculate statistics
+  const totalBookings = await Booking.countDocuments();
+  const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
+  const unpaidBookings = await Booking.countDocuments({ 
+    paymentStatus: { $in: ["UNPAID", "PENDING"] } 
+  });
+  
+  // Calculate total revenue from paid bookings
+  const totalRevenueResult = await Booking.aggregate([
+    { $match: { paymentStatus: "PAID" } },
+    { $group: { _id: null, total: { $sum: "$totalPrice" } } }
+  ]);
+  
+  const totalRevenue = totalRevenueResult[0]?.total || 0;
+
+  return {
+    bookings,
+    totalBookings,
+    paidBookings,
+    unpaidBookings,
+    totalRevenue
+  };
+};
+
+// Get booking statistics for admin dashboard
+export const getBookingStatsForAdmin = async () => {
+  // Booking status counts
+  const pendingBookings = await Booking.countDocuments({ status: "PENDING" });
+  const confirmedBookings = await Booking.countDocuments({ status: "CONFIRMED" });
+  const completedBookings = await Booking.countDocuments({ status: "COMPLETED" });
+  const cancelledBookings = await Booking.countDocuments({ status: "CANCELLED" });
+
+  // Payment status counts
+  const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
+  const unpaidBookings = await Booking.countDocuments({ 
+    paymentStatus: { $in: ["UNPAID", "PENDING"] } 
+  });
+
+  // Revenue calculations
+  const currentDate = new Date();
+  const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+  
+  // Monthly revenue
+  const monthlyRevenueResult = await Booking.aggregate([
+    { 
+      $match: { 
+        paymentStatus: "PAID",
+        createdAt: { $gte: startOfMonth }
+      } 
+    },
+    { $group: { _id: null, total: { $sum: "$totalPrice" } } }
+  ]);
+
+  // Total revenue
+  const totalRevenueResult = await Booking.aggregate([
+    { $match: { paymentStatus: "PAID" } },
+    { $group: { _id: null, total: { $sum: "$totalPrice" } } }
+  ]);
+
+  // Today's bookings
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+  
+  const todayBookings = await Booking.countDocuments({
+    createdAt: { $gte: startOfDay }
+  });
+
+  return {
+    bookingStatus: {
+      PENDING: pendingBookings,
+      CONFIRMED: confirmedBookings,
+      COMPLETED: completedBookings,
+      CANCELLED: cancelledBookings,
+    },
+    paymentStatus: {
+      PAID: paidBookings,
+      UNPAID: unpaidBookings,
+    },
+    totalRevenue: totalRevenueResult[0]?.total || 0,
+    monthlyRevenue: monthlyRevenueResult[0]?.total || 0,
+    totalBookings: pendingBookings + confirmedBookings + completedBookings + cancelledBookings,
+    todayBookings: todayBookings,
+  };
+};
+
+// Get booking by ID for admin (with full details)
+const getBookingByIdForAdmin = async (bookingId: string) => {
+  const booking = await Booking.findById(bookingId)
+    .populate({
+      path: "tourist",
+      select: "_id name email phone profilePicture",
+    })
+    .populate({
+      path: "guide",
+      select: "_id name email phone profilePicture",
+    })
+    .populate({
+      path: "listing",
+      select: "_id title description price duration category images location",
+    })
+    .lean();
+
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+  }
+
+  return booking;
+};
+
+// Update booking status
+const updateBookingStatus = async (bookingId: string, status: BookingStatus) => {
+  const booking = await Booking.findById(bookingId);
+  
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+  }
+
+  // Update the status
+  booking.status = status;
+  await booking.save();
+
+  // Return populated booking
+  const updatedBooking = await Booking.findById(bookingId)
+    .populate("tourist", "_id name email")
+    .populate("guide", "_id name email")
+    .populate("listing", "_id title");
+
+  return updatedBooking;
+};
+
+// Update payment status
+const updatePaymentStatus = async (bookingId: string, paymentStatus: PaymentStatus) => {
+  const booking = await Booking.findById(bookingId);
+  
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
+  }
+
+  booking.paymentStatus = paymentStatus;
+  await booking.save();
+
+  return booking;
+};
+
+export const BookingServices = {
+  getAllBookingsForAdmin,
+  getBookingStatsForAdmin,
+  getBookingByIdForAdmin,
+  updateBookingStatus,
+  updatePaymentStatus,
+};
+ 
+
+// Get booking statistics (simple)
+// export const getBookingStats = async () => {
+//   const totalBookings = await Booking.countDocuments({});
+//   const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
+//   const pendingBookings = await Booking.countDocuments({ status: "PENDING" });
+
+//   return {
+//     totalBookings,
+//     paidBookings,
+//     pendingBookings,
+//     unpaidBookings: totalBookings - paidBookings,
+//   };
+// };
 export default new BookingService();

@@ -1,4 +1,4 @@
-import { Review } from "./review.model";
+import { Review } from  "./review.model";
 import { Booking } from "../bookings/booking.model";
 import { User } from "../users/user.model";
 import AppError from "../../utils/AppError";
