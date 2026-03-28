@@ -1,0 +1,28 @@
+
+> local-guide-backend@1.0.0 build
+> tsc
+
+src/app/modules/bookings/booking.controller.ts(133,7): error TS2353: Object literal may only specify known properties, and 'totalBookings' does not exist in type 'TMeta'.
+src/app/modules/dashboard/touristDashboard.service.ts(117,37): error TS2339: Property 'title' does not exist on type 'ObjectId'.
+src/app/modules/dashboard/touristDashboard.service.ts(118,35): error TS2339: Property 'name' does not exist on type 'ObjectId'.
+src/app/modules/dashboard/touristDashboard.service.ts(119,36): error TS2339: Property 'profilePicture' does not exist on type 'ObjectId'.
+src/app/modules/dashboard/touristDashboard.service.ts(121,28): error TS2339: Property 'startDate' does not exist on type 'Document<ObjectId, any, any, Record<string, any>, {}> & IBooking & Required<{ _id: ObjectId; }> & { __v: number; }'.
+src/app/modules/dashboard/touristDashboard.service.ts(122,26): error TS2339: Property 'endDate' does not exist on type 'Document<ObjectId, any, any, Record<string, any>, {}> & IBooking & Required<{ _id: ObjectId; }> & { __v: number; }'.
+src/app/modules/dashboard/touristDashboard.service.ts(123,25): error TS2339: Property 'amount' does not exist on type 'Document<ObjectId, any, any, Record<string, any>, {}> & IBooking & Required<{ _id: ObjectId; }> & { __v: number; }'.
+src/app/modules/guide/earnings.controller.ts(2,24): error TS2307: Cannot find module '@/utils/catchAsync' or its corresponding type declarations.
+src/app/modules/guide/earnings.controller.ts(3,34): error TS2307: Cannot find module '@/services/guide/earnings.service' or its corresponding type declarations.
+src/app/modules/guide/earnings.controller.ts(4,32): error TS2307: Cannot find module '@/middleware/auth.middleware' or its corresponding type declarations.
+src/app/modules/guide/earnings.controller.ts(5,33): error TS2307: Cannot find module '@/middleware/validation.middleware' or its corresponding type declarations.
+src/app/modules/guide/earnings.controller.ts(6,41): error TS2307: Cannot find module '@/validations/guide/earnings.validation' or its corresponding type declarations.
+src/app/modules/guide/earnings.controller.ts(7,22): error TS2307: Cannot find module '@/utils/appError' or its corresponding type declarations.
+src/app/modules/guide/earnings.controller.ts(40,37): error TS2345: Argument of type 'string | ParsedQs | (string | ParsedQs)[]' is not assignable to parameter of type 'string'.
+  Type 'ParsedQs' is not assignable to type 'string'.
+src/app/modules/guide/earnings.route.ts(2,32): error TS2307: Cannot find module '@/middleware/auth.middleware' or its corresponding type declarations.
+src/app/modules/guide/earnings.route.ts(3,32): error TS2307: Cannot find module '@/middleware/role.middleware' or its corresponding type declarations.
+src/app/modules/guide/earnings.route.ts(4,33): error TS2307: Cannot find module '@/middleware/validation.middleware' or its corresponding type declarations.
+src/app/modules/guide/earnings.route.ts(10,41): error TS2307: Cannot find module '@/validations/guide/earnings.validation' or its corresponding type declarations.
+src/app/modules/guide/earnings.service.ts(2,21): error TS2307: Cannot find module '@/models/booking.model' or its corresponding type declarations.
+src/app/modules/guide/earnings.service.ts(4,38): error TS2307: Cannot find module '@/interfaces/earnings.interface' or its corresponding type declarations.
+src/app/modules/guide/earnings.service.ts(5,26): error TS2307: Cannot find module '@/utils/pagination' or its corresponding type declarations.
+src/app/utils/QueryBuilder.ts(36,9): error TS18046: 'queryObj.price' is of type 'unknown'.
+src/app/utils/QueryBuilder.ts(40,9): error TS18046: 'queryObj.price' is of type 'unknown'.
