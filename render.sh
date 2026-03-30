@@ -16,8 +16,8 @@ echo -e "${GREEN}========================================${NC}"
 
 # 1. Install dependencies
 echo -e "${YELLOW}[1/6] Installing dependencies...${NC}"
-# ⚡ এখানে পরিবর্তন করা হয়েছে: ভার্সন কনফ্লিক্ট এড়াতে --legacy-peer-deps যুক্ত করা হলো
-npm install --legacy-peer-deps
+ 
+npm install --include=dev --legacy-peer-deps
 
 # 2. Install TypeScript globally if needed
 echo -e "${YELLOW}[2/6] Checking TypeScript...${NC}"
