@@ -16,7 +16,7 @@ echo -e "${GREEN}========================================${NC}"
 
 # 1. Install dependencies
 echo -e "${YELLOW}[1/6] Installing dependencies...${NC}"
- 
+# ⚡ এখানে শুধু ইন্সটল হবে, বিল্ড হবে না।
 npm install --include=dev --legacy-peer-deps
 
 # 2. Install TypeScript globally if needed
@@ -53,11 +53,6 @@ echo "NODE_ENV: ${NODE_ENV:-not set}"
 echo "PORT: ${PORT:-5000}"
 echo "MongoDB: ${DATABASE_URL:0:50}..."
 
-# 6. Start the server
-echo -e "${YELLOW}[6/6] Starting server...${NC}"
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}   Server is starting...               ${NC}"
+echo -e "${GREEN}   Build Process Completed Successfully! ${NC}"
 echo -e "${GREEN}========================================${NC}"
-
-# Start the server
-exec npm start
