@@ -16,7 +16,8 @@ echo -e "${GREEN}========================================${NC}"
 
 # 1. Install dependencies
 echo -e "${YELLOW}[1/6] Installing dependencies...${NC}"
-npm install
+# ⚡ এখানে পরিবর্তন করা হয়েছে: ভার্সন কনফ্লিক্ট এড়াতে --legacy-peer-deps যুক্ত করা হলো
+npm install --legacy-peer-deps
 
 # 2. Install TypeScript globally if needed
 echo -e "${YELLOW}[2/6] Checking TypeScript...${NC}"
@@ -55,7 +56,7 @@ echo "MongoDB: ${DATABASE_URL:0:50}..."
 # 6. Start the server
 echo -e "${YELLOW}[6/6] Starting server...${NC}"
 echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}   Server is starting...              ${NC}"
+echo -e "${GREEN}   Server is starting...               ${NC}"
 echo -e "${GREEN}========================================${NC}"
 
 # Start the server
