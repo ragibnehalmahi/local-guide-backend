@@ -13,6 +13,7 @@ const reviews_validation_1 = require("./reviews.validation");
 const router = express_1.default.Router();
 // Tourist only
 router.post("/", (0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST), (0, validateRequest_1.default)(reviews_validation_1.createReviewSchema), review_controller_1.ReviewController.createReview);
+router.get("/my-reviews", (0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST), review_controller_1.ReviewController.getMyReviews);
 // Public
 router.get("/:guideId", review_controller_1.ReviewController.getReviewsForGuide);
 exports.ReviewRouter = router;

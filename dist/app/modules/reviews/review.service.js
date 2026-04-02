@@ -32,7 +32,20 @@ const createReview = async (touristId, payload) => {
 const getReviewsByGuide = async (guideId) => {
     return review_model_1.Review.find({ guide: guideId }).populate("tourist", "name").sort({ createdAt: -1 });
 };
+const getMyReviews = async (touristId) => {
+    return review_model_1.Review.find({ tourist: touristId })
+        .populate({
+        path: "booking",
+        populate: {
+            path: "listing",
+            select: "title"
+        }
+    })
+        .populate("guide", "name avatar")
+        .sort({ createdAt: -1 });
+};
 exports.ReviewService = {
     createReview,
     getReviewsByGuide,
+    getMyReviews,
 };

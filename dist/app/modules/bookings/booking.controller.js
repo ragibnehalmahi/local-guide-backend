@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookingController = exports.BookingControllers = exports.completeBooking = exports.cancelBooking = exports.declineBooking = exports.confirmBooking = exports.getBookingsForGuide = exports.getMyBookings = exports.getBookingById = exports.createBooking = void 0;
+exports.BookingController = exports.BookingControllers = exports.completeBooking = exports.cancelBooking = exports.declineBooking = exports.confirmBooking = exports.getBookingsForGuide = exports.getMyBookings = exports.getCompletedBookingsForTourist = exports.getBookingById = exports.createBooking = void 0;
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
@@ -63,6 +63,16 @@ exports.getBookingById = (0, catchAsync_1.default)(async (req, res) => {
         statusCode: http_status_codes_1.default.OK,
         message: "Booking retrieved successfully",
         data: booking
+    });
+});
+exports.getCompletedBookingsForTourist = (0, catchAsync_1.default)(async (req, res) => {
+    const touristId = req.user._id;
+    const bookings = await booking_service_1.default.getCompletedBookingsForTourist(touristId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: "Your completed bookings retrieved successfully",
+        data: bookings
     });
 });
 exports.getMyBookings = (0, catchAsync_1.default)(async (req, res) => {
@@ -216,9 +226,11 @@ exports.BookingController = {
     createBooking: exports.createBooking,
     getBookingById: exports.getBookingById,
     getMyBookings: exports.getMyBookings,
+    getCompletedBookingsForTourist: exports.getCompletedBookingsForTourist,
     getBookingsForGuide: exports.getBookingsForGuide,
     confirmBooking: exports.confirmBooking,
     declineBooking: exports.declineBooking,
     cancelBooking: exports.cancelBooking,
-    completeBooking: exports.completeBooking, getAllBookingsForAdmin,
+    completeBooking: exports.completeBooking,
+    getAllBookingsForAdmin,
 };

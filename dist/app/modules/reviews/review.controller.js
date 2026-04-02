@@ -27,7 +27,18 @@ const getReviewsForGuide = (0, catchAsync_1.default)(async (req, res) => {
         data: result,
     });
 });
+const getMyReviews = (0, catchAsync_1.default)(async (req, res) => {
+    const touristId = req.user._id;
+    const result = await review_service_1.ReviewService.getMyReviews(touristId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.default.OK,
+        success: true,
+        message: "My reviews fetched successfully",
+        data: result,
+    });
+});
 exports.ReviewController = {
     createReview,
     getReviewsForGuide,
+    getMyReviews,
 };

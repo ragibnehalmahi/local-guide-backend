@@ -14,6 +14,7 @@ const router = express_1.default.Router();
 router.use((0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST, user_interface_1.UserRole.GUIDE));
 router.post("/", (0, validateRequest_1.default)(booking_validation_1.createBookingSchema), booking_controller_1.BookingController.createBooking);
 router.get("/my-bookings", booking_controller_1.BookingController.getMyBookings);
+router.get("/tourist/completed", booking_controller_1.BookingController.getCompletedBookingsForTourist);
 router.get("/guide-bookings", (0, authGuard_1.authGuard)(user_interface_1.UserRole.GUIDE), booking_controller_1.BookingController.getBookingsForGuide);
 router.get("/:id", booking_controller_1.BookingController.getBookingById);
 router.patch("/:id/confirm", (0, authGuard_1.authGuard)(user_interface_1.UserRole.GUIDE), booking_controller_1.BookingController.confirmBooking);

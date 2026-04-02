@@ -170,6 +170,15 @@ class BookingService {
         await booking.save();
         return booking.populate("listing guide tourist");
     }
+    async getCompletedBookingsForTourist(touristId) {
+        const bookings = await booking_model_1.Booking.find({
+            tourist: touristId,
+            status: booking_interface_1.BookingStatus.COMPLETED
+        })
+            .populate("listing guide")
+            .sort({ date: -1 });
+        return bookings;
+    }
 }
 // Get all bookings for admin
 const getAllBookingsForAdmin = async () => {
