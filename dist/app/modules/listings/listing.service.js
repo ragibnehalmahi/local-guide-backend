@@ -250,8 +250,6 @@ class ListingService {
     }
 }
 exports.ListingService = ListingService;
-// import httpStatus from "http-status-codes";
-// import { IListing, ListingCategory } from "./listing.interface";
 // import { Listing } from "./listing.model";
 // import AppError from "../../utils/AppError";
 // import { User } from "../users/user.model";

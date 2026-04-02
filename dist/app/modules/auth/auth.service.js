@@ -18,55 +18,37 @@ const generateToken = (payload, secret, expiresIn) => {
 };
 // ------------------ LOGIN FUNCTION ------------------
 const credentialsLogin = async (payload) => {
-    console.log("🔑 Service: Received payload:", payload);
-    // Robust check for valid payload object
     if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid request payload. Ensure email and password are provided in JSON body.");
     }
     if (!payload.email || !payload.password) {
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Email and password are required.");
     }
-    // Safely access email and password
     const { email, password } = payload;
-    // 1. Find user and explicitly select the password field
-    // We are removing .lean() here, as .toObject() is used later to remove the password.
     const existingUser = await user_model_1.User.findOne({ email }).select("+password");
     if (!existingUser) {
-        // Security best practice: use a generic error message
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid email or password");
     }
-    // Check user status (Re-added for security based on previous discussion)
     if (existingUser.status !== user_interface_1.UserStatus.ACTIVE) {
-        console.log(`❌ Account not active: ${existingUser.status}`);
         throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, `Your account is ${existingUser.status}. Please contact administrator.`);
     }
     if (!existingUser.password) {
         throw new AppError_1.default(http_status_codes_1.default.INTERNAL_SERVER_ERROR, "User password not found");
     }
-    // Password comparison
-    const isPasswordMatched = await bcryptjs_1.default.compare(password.trim(), // FIX: Add .trim() for comparison safety and robustness
-    existingUser.password);
+    const isPasswordMatched = await bcryptjs_1.default.compare(password.trim(), existingUser.password);
     if (!isPasswordMatched) {
-        // Security best practice: use a generic error message
         throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid email or password");
     }
-    console.log(`🎉 Login successful for: ${email}`);
     const jwtPayload = {
         userId: existingUser._id,
         email: existingUser.email,
         role: existingUser.role,
     };
-    // FIX: Re-adding critical environment variable checks before token generation
-    // This is crucial for preventing 'invalid signature' errors caused by missing secrets.
     if (!process.env.JWT_ACCESS_SECRET || !process.env.JWT_REFRESH_SECRET) {
-        console.error("❌ JWT secrets not configured");
         throw new AppError_1.default(http_status_codes_1.default.INTERNAL_SERVER_ERROR, "Server configuration error: JWT secrets missing.");
     }
-    const accessToken = generateToken(jwtPayload, process.env.JWT_ACCESS_SECRET, (process.env.JWT_ACCESS_EXPIRES || "1h") // Use value from .env, default to '1h'
-    );
-    const refreshToken = generateToken(jwtPayload, process.env.JWT_REFRESH_SECRET, (process.env.JWT_REFRESH_EXPIRES || "7d") // Use value from .env, default to '7d'
-    );
-    // Use toObject() to ensure password field is removed from the response
+    const accessToken = generateToken(jwtPayload, process.env.JWT_ACCESS_SECRET, (process.env.JWT_ACCESS_EXPIRES || "1h"));
+    const refreshToken = generateToken(jwtPayload, process.env.JWT_REFRESH_SECRET, (process.env.JWT_REFRESH_EXPIRES || "7d"));
     const { password: pass, ...rest } = existingUser.toObject();
     return {
         accessToken,
@@ -93,9 +75,7 @@ const getNewAccessToken = async (refreshToken) => {
             userId: user._id,
             email: user.email,
             role: user.role,
-        }, 
-        // process.env.JWT_ACCESS_SECRET as string,
-        process.env.JWT_ACCESS_SECRET, process.env.JWT_ACCESS_EXPIRES || "1h");
+        }, process.env.JWT_ACCESS_SECRET, process.env.JWT_ACCESS_EXPIRES || "1h");
         return {
             user,
             accessToken: newAccessToken,
@@ -133,23 +113,9 @@ const tokenSchema = new mongoose_1.Schema({
     expiresAt: { type: Date, required: true },
 }, { timestamps: true });
 const TokenModel = (0, mongoose_1.model)("Token", tokenSchema);
-// ------------------ UPDATED LOGOUT FUNCTION ------------------
-// const logout = async (refreshToken: string) => {
-//   if (!refreshToken) {
-//     throw new AppError("No refresh token provided", httpStatus.BAD_REQUEST);
-//   }
-//   // ✅ Remove the token from DB
-//   const deleted = await TokenModel.findOneAndDelete({ token: refreshToken });
-//   if (!deleted) {
-//     throw new AppError("Invalid or already expired token", httpStatus.NOT_FOUND);
-//   }
-//   console.log("✅ Token removed successfully from DB");
-//   return { message: "Logout successful" };
-// };
 // ------------------ EXPORT ------------------
 exports.AuthService = {
     credentialsLogin,
     getNewAccessToken,
     changePassword,
-    // logout,
 };
