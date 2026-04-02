@@ -228,6 +228,17 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
 
     return booking.populate("listing guide tourist");
   }
+
+  async getCompletedBookingsForTourist(touristId: string): Promise<IBooking[]> {
+    const bookings = await Booking.find({
+      tourist: touristId,
+      status: BookingStatus.COMPLETED
+    })
+      .populate("listing guide")
+      .sort({ date: -1 });
+
+    return bookings;
+  }
 }
  
 

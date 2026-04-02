@@ -30,7 +30,21 @@ const getReviewsByGuide = async (guideId: string) => {
   return Review.find({ guide: guideId }).populate("tourist", "name").sort({ createdAt: -1 });
 };
 
+const getMyReviews = async (touristId: string) => {
+  return Review.find({ tourist: touristId })
+    .populate({
+      path: "booking",
+      populate: {
+         path: "listing",
+         select: "title"
+      }
+    })
+    .populate("guide", "name avatar")
+    .sort({ createdAt: -1 });
+};
+
 export const ReviewService = {
   createReview,
   getReviewsByGuide,
+  getMyReviews,
 };
