@@ -336,8 +336,6 @@ class ListingService {
 // Export the class
 export { ListingService };
 
-// import httpStatus from "http-status-codes";
-// import { IListing, ListingCategory } from "./listing.interface";
 // import { Listing } from "./listing.model";
 // import AppError from "../../utils/AppError";
 // import { User } from "../users/user.model";
