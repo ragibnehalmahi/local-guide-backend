@@ -38,9 +38,19 @@ const getMyReviews = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+const getCompletedBookings = catchAsync(async (req: Request, res: Response) => {
+  const touristId = (req as any).user._id;
+  const result = await ReviewService.getCompletedBookings(touristId);
 
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: "Completed bookings fetched successfully",
+    data: result,
+  });
+});
 export const ReviewController = {
   createReview,
   getReviewsForGuide,
-  getMyReviews,
+  getMyReviews,getCompletedBookings
 };
