@@ -1,14 +1,20 @@
-// src/app/modules/reviews/review.routes.ts
 import express from "express";
 import { ReviewController } from "./review.controller";
 import { authGuard } from "../../middlewares/authGuard";
 import { UserRole } from "../users/user.interface";
+ 
+ 
 import validateRequest from "../../middlewares/validateRequest";
 import { createReviewSchema } from "./reviews.validation";
 
 const router = express.Router();
 
+// ============ PUBLIC ROUTES ============
+// ✅ Get reviews for a specific guide
+router.get("/:guideId", ReviewController.getReviewsForGuide);
+
 // ============ TOURIST ROUTES ============
+// ✅ Create a review (Tourist only)
 router.post(
   "/", 
   authGuard(UserRole.TOURIST), 
@@ -16,43 +22,33 @@ router.post(
   ReviewController.createReview
 );
 
-// ✅ Tourist's own reviews
+// ✅ Get current tourist's own reviews
 router.get(
-  "/my-reviews", 
+  "/tourist/my-reviews", 
   authGuard(UserRole.TOURIST), 
   ReviewController.getMyReviews
 );
 
-// ✅ Completed bookings for review (add this)
+// ✅ Get completed bookings that can be reviewed
 router.get(
-  "/completed-bookings", 
+  "/tourist/completed-bookings", 
   authGuard(UserRole.TOURIST), 
   ReviewController.getCompletedBookings
 );
 
-// ============ PUBLIC ROUTES ============
-router.get("/:guideId", ReviewController.getReviewsForGuide);
+// ============ ADMIN ROUTES (Optional) ============
+// ✅ Update review (Admin only)
+router.patch(
+  "/:reviewId",
+  authGuard(UserRole.ADMIN),
+  ReviewController.updateReview
+);
 
-export const ReviewRouter = router;
+// ✅ Delete review (Admin only)
+router.delete(
+  "/:reviewId",
+  authGuard(UserRole.ADMIN),
+  ReviewController.deleteReview
+);
 
-
-
-// import express from "express";
-// import { ReviewController } from "./review.controller";
-// import { authGuard } from "../../middlewares/authGuard";
-// import { UserRole } from "../users/user.interface";
-
-
-// import validateRequest from "../../middlewares/validateRequest";
-// import { createReviewSchema } from "./reviews.validation";
-
-// const router = express.Router();
-
-// // Tourist only
-// router.post("/", authGuard(UserRole.TOURIST), validateRequest(createReviewSchema), ReviewController.createReview);
-// router.get("/my-reviews", authGuard(UserRole.TOURIST), ReviewController.getMyReviews);
-
-// // Public
-// router.get("/:guideId", ReviewController.getReviewsForGuide);
-
-// export const ReviewRouter = router;
+export const ReviewRouter = router;

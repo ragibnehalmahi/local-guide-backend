@@ -38,19 +38,6 @@ export const getBookingById = catchAsync(async (req: Request, res: Response) => 
   });
 });
 
-export const getCompletedBookingsForTourist = catchAsync(async (req: Request, res: Response) => {
-  const touristId = (req as any).user._id;
-
-  const bookings = await bookingService.getCompletedBookingsForTourist(touristId);
-
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Your completed bookings retrieved successfully",
-    data: bookings
-  });
-});
-
 export const getMyBookings = catchAsync(async (req: Request, res: Response) => {
   const touristId = (req as any).user._id;
 
@@ -238,11 +225,10 @@ export const BookingController = {
   createBooking,
   getBookingById,
   getMyBookings,
-  getCompletedBookingsForTourist,
   getBookingsForGuide,
   confirmBooking,
   declineBooking,
   cancelBooking,
-  completeBooking,
-  getAllBookingsForAdmin,
+  completeBooking,getAllBookingsForAdmin,
+ 
 };

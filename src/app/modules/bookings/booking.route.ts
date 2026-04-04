@@ -12,7 +12,6 @@ router.use(authGuard(UserRole.TOURIST, UserRole.GUIDE));
 
 router.post("/", validateRequest(createBookingSchema), BookingController.createBooking);
 router.get("/my-bookings", BookingController.getMyBookings);
-router.get("/tourist/completed", BookingController.getCompletedBookingsForTourist);
 router.get("/guide-bookings", authGuard(UserRole.GUIDE), BookingController.getBookingsForGuide);
 router.get("/:id", BookingController.getBookingById);
 router.patch("/:id/confirm", authGuard(UserRole.GUIDE), BookingController.confirmBooking);
