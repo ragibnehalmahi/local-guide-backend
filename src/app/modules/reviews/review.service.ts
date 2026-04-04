@@ -38,13 +38,35 @@ const createReview = async (touristId: string, payload: any) => {
     comment,
   });
 
-  // Update guide's average rating
-  const reviews = await Review.find({ guide: booking.guide });
-  const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
-  await User.findByIdAndUpdate(booking.guide, { rating: avgRating });
+  // Update guide's average rating safely
+  try {
+    const reviews = await Review.find({ guide: booking.guide });
+    const reviewsCount = reviews.length;
+    
+    if (reviewsCount > 0) {
+      // Calculate average with safety check for r.rating being undefined/null
+      const totalRatingSum = reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0);
+      const rawAvgRating = totalRatingSum / reviewsCount;
+      
+      // Force to 1 decimal place (e.g. 4.8)
+      const avgRating = parseFloat(rawAvgRating.toFixed(1));
+      
+      console.log(`[Review Service] Updating Guide ${booking.guide}: Count=${reviewsCount}, New Rating=${avgRating}`);
+      
+      // Update both rating AND totalReviews count for consistency
+      const guideId = (booking.guide as any)._id || booking.guide;
+      await User.findByIdAndUpdate(guideId, { 
+        rating: avgRating,
+        totalReviews: reviewsCount
+      });
+    }
+  } catch (updateError) {
+    console.error("[Review Service] Non-critical error updating guide stats:", updateError);
+    // We don't throw here to avoid failing a successful review creation if JUST the stats update fails
+  }
 
   return review;
-};
+}
 
 const getReviewsByGuide = async (guideId: string) => {
   return Review.find({ guide: guideId })
