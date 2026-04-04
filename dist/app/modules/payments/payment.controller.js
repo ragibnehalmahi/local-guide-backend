@@ -34,20 +34,14 @@ exports.paymentSuccess = (0, catchAsync_1.default)(async (req, res) => {
         // Process payment
         await payment_service_1.PaymentService.handlePaymentCallback(tran_id, amount, status, val_id);
         // ✅ Redirect to frontend success page
-        let frontendBase = process.env.FRONTEND_URL || "http://localhost:3000";
-        if (frontendBase.includes("5000"))
-            frontendBase = "http://localhost:3000"; // Fallback to prevent infinite loop/bad envs
-        const frontendUrl = `${frontendBase}/payment/success?transactionId=${tran_id}&amount=${amount}&status=success`;
+        const frontendUrl = `${process.env.FRONTEND_URL}/payment/success?transactionId=${tran_id}&amount=${amount}&status=success`;
         console.log("🔀 Redirecting to:", frontendUrl);
         return res.redirect(frontendUrl);
     }
     catch (error) {
         console.error("❌ Error in payment success:", error.message);
         // Redirect to fail page
-        let frontendBase = process.env.FRONTEND_URL || "http://localhost:3000";
-        if (frontendBase.includes("5000"))
-            frontendBase = "http://localhost:3000"; // Fallback to prevent infinite loop/bad envs
-        const failUrl = `${frontendBase}/payment/fail?transactionId=${tran_id}&amount=${amount}&status=error&message=${encodeURIComponent(error.message)}`;
+        const failUrl = `${process.env.FRONTEND_URL}/payment/fail?transactionId=${tran_id}&amount=${amount}&status=error&message=${encodeURIComponent(error.message)}`;
         return res.redirect(failUrl);
     }
 });
@@ -58,10 +52,7 @@ exports.paymentFail = (0, catchAsync_1.default)(async (req, res) => {
     if (tran_id) {
         await payment_service_1.PaymentService.handlePaymentFail(tran_id);
     }
-    let frontendBase = process.env.FRONTEND_URL || "http://localhost:3000";
-    if (frontendBase.includes("5000"))
-        frontendBase = "http://localhost:3000";
-    const failUrl = `${frontendBase}/payment/fail?transactionId=${tran_id}&amount=${amount}&status=failed`;
+    const failUrl = `${process.env.FRONTEND_URL}/payment/fail?transactionId=${tran_id}&amount=${amount}&status=failed`;
     return res.redirect(failUrl);
 });
 exports.paymentCancel = (0, catchAsync_1.default)(async (req, res) => {
@@ -71,10 +62,7 @@ exports.paymentCancel = (0, catchAsync_1.default)(async (req, res) => {
     if (tran_id) {
         await payment_service_1.PaymentService.handlePaymentFail(tran_id);
     }
-    let frontendBase = process.env.FRONTEND_URL || "http://localhost:3000";
-    if (frontendBase.includes("5000"))
-        frontendBase = "http://localhost:3000";
-    const cancelUrl = `${frontendBase}/payment/fail?transactionId=${tran_id}&amount=${amount}&status=cancelled`;
+    const cancelUrl = `${process.env.FRONTEND_URL}/payment/fail?transactionId=${tran_id}&amount=${amount}&status=cancelled`;
     return res.redirect(cancelUrl);
 });
 exports.checkPaymentStatus = (0, catchAsync_1.default)(async (req, res) => {

@@ -37,8 +37,44 @@ const getMyReviews = (0, catchAsync_1.default)(async (req, res) => {
         data: result,
     });
 });
+// ✅ New: Get completed bookings for review
+const getCompletedBookings = (0, catchAsync_1.default)(async (req, res) => {
+    const touristId = req.user._id;
+    const result = await review_service_1.ReviewService.getCompletedBookingsForReview(touristId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.default.OK,
+        success: true,
+        message: "Completed bookings fetched successfully",
+        data: result,
+    });
+});
+// ✅ New: Update review (Admin only)
+const updateReview = (0, catchAsync_1.default)(async (req, res) => {
+    const { reviewId } = req.params;
+    const result = await review_service_1.ReviewService.updateReview(reviewId, req.body);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.default.OK,
+        success: true,
+        message: "Review updated successfully",
+        data: result,
+    });
+});
+// ✅ New: Delete review (Admin only)
+const deleteReview = (0, catchAsync_1.default)(async (req, res) => {
+    const { reviewId } = req.params;
+    await review_service_1.ReviewService.deleteReview(reviewId);
+    (0, sendResponse_1.default)(res, {
+        statusCode: http_status_codes_1.default.OK,
+        success: true,
+        message: "Review deleted successfully",
+        data: null,
+    });
+});
 exports.ReviewController = {
     createReview,
     getReviewsForGuide,
     getMyReviews,
+    getCompletedBookings,
+    updateReview,
+    deleteReview,
 };
