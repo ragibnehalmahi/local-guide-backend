@@ -7,31 +7,23 @@ const booking_model_1 = require("../bookings/booking.model");
 const review_model_1 = require("../reviews/review.model");
 const user_model_1 = require("../users/user.model");
 class TouristDashboardService {
-    /**
-     * Get tourist dashboard statistics
-     */
     async getTouristDashboardStats(userId) {
         try {
-            // Convert userId to ObjectId if it's a string
             const touristId = typeof userId === 'string'
                 ? new mongoose_1.Types.ObjectId(userId)
                 : userId;
-            // 1. Get total bookings count
             const totalBookings = await booking_model_1.Booking.countDocuments({
                 tourist: touristId,
             });
-            // 2. Get upcoming tours (confirmed bookings with future dates)
             const upcomingTours = await booking_model_1.Booking.countDocuments({
                 tourist: touristId,
                 status: 'confirmed',
                 date: { $gte: new Date() },
             });
-            // 3. Get completed tours
             const completedTours = await booking_model_1.Booking.countDocuments({
                 tourist: touristId,
                 status: 'completed',
             });
-            // 4. Calculate total spent (sum of all completed booking amounts)
             const totalSpentAggregation = await booking_model_1.Booking.aggregate([
                 {
                     $match: {
@@ -48,7 +40,6 @@ class TouristDashboardService {
                 },
             ]);
             const totalSpent = totalSpentAggregation[0]?.total || 0;
-            // 5. Get wishlist count
             const tourist = await user_model_1.User.findById(touristId)
                 .select('wishlist')
                 .populate({
@@ -56,7 +47,6 @@ class TouristDashboardService {
                 select: '_id',
             });
             const wishlistCount = tourist?.wishlist?.length || 0;
-            // 6. Calculate average guide rating given by tourist
             const reviewAggregation = await review_model_1.Review.aggregate([
                 {
                     $match: {
@@ -71,7 +61,6 @@ class TouristDashboardService {
                 },
             ]);
             const averageGuideRating = reviewAggregation[0]?.averageRating || 0;
-            // 7. Get recent bookings (last 5 bookings)
             const recentBookings = await booking_model_1.Booking.find({
                 tourist: touristId,
             })
@@ -87,7 +76,6 @@ class TouristDashboardService {
             })
                 .select('status date totalPrice createdAt')
                 .lean();
-            // Format recent bookings
             const formattedRecentBookings = recentBookings.map((booking) => ({
                 id: booking._id,
                 tourTitle: booking.listing?.title || 'N/A',
@@ -115,7 +103,6 @@ class TouristDashboardService {
         }
         catch (error) {
             console.error('Error in getTouristDashboardStats:', error);
-            // Return default stats in case of error
             const defaultStats = {
                 totalBookings: 0,
                 upcomingTours: 0,

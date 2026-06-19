@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\bookings\booking.validation.ts              
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createBookingSchema = void 0;
 const zod_1 = require("zod");

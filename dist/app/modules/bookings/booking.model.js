@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\bookings\booking.model.ts                           
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Booking = exports.PaymentStatus = exports.BookingStatus = void 0;
 const mongoose_1 = require("mongoose");

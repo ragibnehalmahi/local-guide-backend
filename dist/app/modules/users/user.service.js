@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserServices = void 0;
+// src/app/modules/users/user.service.ts
 const user_interface_1 = require("./user.interface");
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -182,6 +183,21 @@ const updateUserStatus = async (userId, status) => {
     return user;
 };
 /**
+ * Update user role (Admin only)
+ */
+const updateUserRole = async (userId, role) => {
+    const user = await user_model_1.User.findById(userId);
+    if (!user) {
+        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
+    }
+    if (!Object.values(user_interface_1.UserRole).includes(role)) {
+        throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Invalid role value");
+    }
+    user.role = role;
+    await user.save();
+    return user;
+};
+/**
  * Get all listings with filtering
  */
 const getAllListingsFromDB = async (query) => {
@@ -257,6 +273,24 @@ const getUserById = async (userId) => {
     }
     return user;
 };
+const getWishlistWithDetails = async (userId) => {
+    const user = await user_model_1.User.findById(userId).select("wishlist");
+    if (!user) {
+        throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "User not found");
+    }
+    const wishlistIds = user.wishlist || [];
+    if (wishlistIds.length === 0) {
+        return [];
+    }
+    const listings = await listing_model_1.Listing.find({
+        _id: { $in: wishlistIds },
+        active: true,
+    }).populate("guide", "name profilePicture rating");
+    const orderedListings = wishlistIds
+        .map(id => listings.find(l => l._id.toString() === id.toString()))
+        .filter(Boolean);
+    return orderedListings;
+};
 exports.UserServices = {
     createUser,
     updateUser,
@@ -265,8 +299,9 @@ exports.UserServices = {
     getAllGuides,
     searchUserByEmail,
     updateUserStatus,
+    updateUserRole,
     addToWishlist,
     removeFromWishlist,
     getUserById,
-    getAllListingsFromDB
+    getAllListingsFromDB, getWishlistWithDetails
 };

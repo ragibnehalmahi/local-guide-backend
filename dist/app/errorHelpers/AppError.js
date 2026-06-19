@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\errorHelpers\AppError.ts  
 Object.defineProperty(exports, "__esModule", { value: true });
 class AppError extends Error {
     constructor(statusCode, message, stack = '') {

@@ -54,13 +54,22 @@ const updateUser = (0, catchAsync_1.default)(async (req, res) => {
         data: user
     });
 });
-// ==================== UPDATE MY PROFILE ====================
 const updateMyProfile = (0, catchAsync_1.default)(async (req, res) => {
     const userId = req.user._id;
     const verifiedToken = req.user;
-    const payload = req.body;
+    let payload = req.body;
     if (req.file) {
         payload.profilePicture = req.file.path;
+    }
+    // ✅ Convert comma-separated strings to arrays
+    if (payload.languages && typeof payload.languages === "string") {
+        payload.languages = payload.languages.split(",").map((s) => s.trim());
+    }
+    if (payload.expertise && typeof payload.expertise === "string") {
+        payload.expertise = payload.expertise.split(",").map((s) => s.trim());
+    }
+    if (payload.travelPreferences && typeof payload.travelPreferences === "string") {
+        payload.travelPreferences = payload.travelPreferences.split(",").map((s) => s.trim());
     }
     const user = await user_service_1.UserServices.updateUser(userId, payload, verifiedToken);
     (0, sendResponse_1.default)(res, {
@@ -127,6 +136,16 @@ const removeFromWishlist = (0, catchAsync_1.default)(async (req, res) => {
         data: { wishlist }
     });
 });
+const getWishlist = (0, catchAsync_1.default)(async (req, res) => {
+    const userId = req.user._id;
+    const wishlistItems = await user_service_1.UserServices.getWishlistWithDetails(userId);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: "Wishlist fetched successfully",
+        data: wishlistItems,
+    });
+});
 // ==================== SEARCH USER BY EMAIL ====================
 const searchUserByEmail = (0, catchAsync_1.default)(async (req, res) => {
     const { email } = req.query;
@@ -144,6 +163,18 @@ const searchUserByEmail = (0, catchAsync_1.default)(async (req, res) => {
         data: user
     });
 });
+// ==================== UPDATE USER ROLE (ADMIN) ====================
+const updateUserRole = (0, catchAsync_1.default)(async (req, res) => {
+    const { id } = req.params;
+    const { role } = req.body;
+    const updatedUser = await user_service_1.UserServices.updateUserRole(id, role);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_codes_1.default.OK,
+        message: "User role updated successfully",
+        data: updatedUser
+    });
+});
 exports.UserControllers = {
     createUser,
     getMyProfile,
@@ -153,7 +184,8 @@ exports.UserControllers = {
     getAllUsers,
     getAllGuides,
     updateUserStatus,
+    updateUserRole,
     addToWishlist,
     removeFromWishlist,
-    searchUserByEmail
+    searchUserByEmail, getWishlist
 };

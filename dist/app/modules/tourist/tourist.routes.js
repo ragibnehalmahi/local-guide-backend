@@ -13,5 +13,5 @@ const router = express_1.default.Router();
 // Protected routes (Tourist only)
 router.use((0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST));
 // Dashboard statistics
-router.get("/dashboard/stats", tourist_controller_1.TouristController.getTouristDashboardStats);
+router.get("/dashboard/stats", (0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST), tourist_controller_1.TouristController.getTouristDashboardStats);
 exports.TouristRoutes = router;

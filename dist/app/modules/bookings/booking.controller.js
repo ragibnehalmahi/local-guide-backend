@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\bookings\booking.controller.ts              
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -36,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BookingController = exports.BookingControllers = exports.completeBooking = exports.cancelBooking = exports.declineBooking = exports.confirmBooking = exports.getBookingsForGuide = exports.getMyBookings = exports.getBookingById = exports.createBooking = void 0;
+exports.BookingController = exports.completeBooking = exports.cancelBooking = exports.declineBooking = exports.confirmBooking = exports.getBookingsForGuide = exports.getMyBookings = exports.getBookingById = exports.createBooking = void 0;
 const http_status_codes_1 = __importDefault(require("http-status-codes"));
 const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
 const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
@@ -205,13 +206,6 @@ const updatePaymentStatus = (0, catchAsync_1.default)(async (req, res) => {
         data: updatedBooking,
     });
 });
-exports.BookingControllers = {
-    getAllBookingsForAdmin,
-    getBookingStatsForAdmin,
-    getBookingByIdForAdmin,
-    updateBookingStatus,
-    updatePaymentStatus,
-};
 exports.BookingController = {
     createBooking: exports.createBooking,
     getBookingById: exports.getBookingById,
@@ -221,4 +215,8 @@ exports.BookingController = {
     declineBooking: exports.declineBooking,
     cancelBooking: exports.cancelBooking,
     completeBooking: exports.completeBooking, getAllBookingsForAdmin,
+    getBookingStatsForAdmin,
+    getBookingByIdForAdmin,
+    updateBookingStatus,
+    updatePaymentStatus,
 };

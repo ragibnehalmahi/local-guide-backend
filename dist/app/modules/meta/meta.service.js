@@ -1,32 +1,14 @@
 "use strict";
+//local-guide-backend\src\app\modules\meta\meta.service.ts    
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.MetaService = void 0;
 const booking_model_1 = require("../bookings/booking.model");
 const listing_model_1 = require("../listings/listing.model");
 const review_model_1 = require("../reviews/review.model");
 const user_model_1 = require("../users/user.model");
-// const getDashboardStats = async (userId: string, role: string) => {
-//   if (role === "guide") {
-//     const listings = await Listing.countDocuments({ guide: userId });
-//     const bookings = await Booking.countDocuments({ guide: userId });
-//     const revenue = await Booking.aggregate([
-//       { $match: { guide: userId, paymentStatus: "PAID" } },
-//       { $group: { _id: null, total: { $sum: "$totalPrice" } } },
-//     ]);
-//     return { listings, bookings, revenue: revenue[0]?.total || 0 };
-//   } else if (role === "tourist") {
-//     const bookings = await Booking.countDocuments({ tourist: userId });
-//     const wishlist = await User.findById(userId).select("wishlist");
-//     return { bookings, wishlistCount: wishlist?.wishlist?.length || 0 };
-//   } else if (role === "admin") {
-//     const users = await User.countDocuments();
-//     const listings = await Listing.countDocuments();
-//     const bookings = await Booking.countDocuments();
-//     return { users, listings, bookings };
-//   }
-//   return {};
-// };
+const mongoose_1 = require("mongoose");
 const getDashboardStats = async (userId, role) => {
+    const userObjectId = new mongoose_1.Types.ObjectId(userId);
     if (role === "guide") {
         // 1. My Listings count
         const totalListings = await listing_model_1.Listing.countDocuments({ guide: userId });
@@ -36,7 +18,7 @@ const getDashboardStats = async (userId, role) => {
         const revenue = await booking_model_1.Booking.aggregate([
             {
                 $match: {
-                    guide: userId,
+                    guide: userObjectId,
                     status: "COMPLETED",
                     paymentStatus: "PAID"
                 }
@@ -56,7 +38,7 @@ const getDashboardStats = async (userId, role) => {
         });
         // 6. Average Rating (from Review model)
         const reviewStats = await review_model_1.Review.aggregate([
-            { $match: { guide: userId } },
+            { $match: { guide: userObjectId } },
             { $group: { _id: null, avgRating: { $avg: "$rating" } } }
         ]);
         // 7. Recent Reviews
@@ -88,7 +70,7 @@ const getDashboardStats = async (userId, role) => {
         const totalSpentAggregation = await booking_model_1.Booking.aggregate([
             {
                 $match: {
-                    tourist: userId,
+                    tourist: userObjectId,
                     paymentStatus: 'PAID',
                 },
             },

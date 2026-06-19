@@ -14,7 +14,7 @@ const getTouristDashboardStats = (0, catchAsync_1.default)(async (req, res) => {
     (0, sendResponse_1.default)(res, {
         success: true,
         statusCode: http_status_codes_1.default.OK,
-        message: "Stats retrieved successfully",
+        message: "Dashboard stats retrieved",
         data: result,
     });
 });

@@ -19,6 +19,7 @@ router.get("/guides", user_controller_1.UserControllers.getAllGuides);
 // ============ PROTECTED ROUTES ============
 // My profile routes (specific routes FIRST)
 router.get("/me", (0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST, user_interface_1.UserRole.GUIDE, user_interface_1.UserRole.ADMIN), user_controller_1.UserControllers.getMyProfile);
+router.get("/wishlist", (0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST), user_controller_1.UserControllers.getWishlist);
 router.patch("/me", (0, authGuard_1.authGuard)(user_interface_1.UserRole.TOURIST, user_interface_1.UserRole.GUIDE, user_interface_1.UserRole.ADMIN), multer_config_1.multerUpload.single("profilePicture"), (0, validateRequest_1.default)(user_validation_1.UpdateUserSchema), user_controller_1.UserControllers.updateMyProfile);
 // User by ID routes (dynamic routes AFTER)
 router.get("/:id", user_controller_1.UserControllers.getUserById);
@@ -29,5 +30,6 @@ router.delete("/wishlist/:tourId", (0, authGuard_1.authGuard)(user_interface_1.U
 // ============ ADMIN ONLY ROUTES ============
 router.get("/", (0, authGuard_1.authGuard)(user_interface_1.UserRole.ADMIN), user_controller_1.UserControllers.getAllUsers);
 router.patch("/:id/status", (0, authGuard_1.authGuard)(user_interface_1.UserRole.ADMIN), user_controller_1.UserControllers.updateUserStatus);
+router.patch("/:id/role", (0, authGuard_1.authGuard)(user_interface_1.UserRole.ADMIN), user_controller_1.UserControllers.updateUserRole);
 router.get("/search/email", (0, authGuard_1.authGuard)(user_interface_1.UserRole.ADMIN), user_controller_1.UserControllers.searchUserByEmail);
 exports.UserRouter = router;

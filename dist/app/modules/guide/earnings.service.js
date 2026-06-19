@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\guide\earnings.service.ts 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GuideEarningsService = void 0;
 const booking_model_1 = require("../bookings/booking.model");

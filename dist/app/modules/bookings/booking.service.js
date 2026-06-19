@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\bookings\booking.service.ts             
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -48,7 +49,6 @@ class BookingService {
         if (!booking) {
             throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "Booking not found");
         }
-        // Fixed: Use _id.toString() for populated objects, with null check
         if (!booking.tourist || !booking.guide || (booking.tourist._id.toString() !== userId && booking.guide._id.toString() !== userId)) {
             throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "Not authorized");
         }
@@ -66,47 +66,6 @@ class BookingService {
             .sort({ createdAt: -1 });
         return bookings;
     }
-    // async updateBookingStatus(
-    //   bookingId: string,
-    //   guideId: string,
-    //   status: BookingStatus
-    // ): Promise<IBooking> {
-    //   console.log("DEBUG: updateBookingStatus called with bookingId:", bookingId, "guideId:", guideId, "status:", status);  // Optional debug log
-    //   const booking = await Booking.findById(bookingId);
-    //   if (!booking) {
-    //     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
-    //   }
-    //   // Fixed: Use _id.toString() for populated objects, with null check
-    //   if (!booking.guide || booking.guide._id.toString() !== guideId) {
-    //     throw new AppError(httpStatus.FORBIDDEN, "Only guide can update status");
-    //   }
-    //   if (booking.status !== BookingStatus.PENDING) {
-    //     throw new AppError(httpStatus.BAD_REQUEST, "Can only update pending bookings");
-    //   }
-    //   booking.status = status;
-    //   await booking.save();
-    //   return booking.populate("listing guide tourist");
-    // }
-    // async cancelBooking(bookingId: string, userId: string): Promise<void> {
-    //   const booking = await Booking.findById(bookingId);
-    //   if (!booking) {
-    //     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
-    //   }
-    //   // Fixed: Use _id.toString() for populated objects, with null check
-    //   if (!booking.tourist || !booking.guide || (booking.tourist._id.toString() !== userId && booking.guide._id.toString() !== userId)) {
-    //     throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
-    //   }
-    //   if (booking.status === BookingStatus.CANCELLED) {
-    //     throw new AppError(httpStatus.BAD_REQUEST, "Booking already cancelled");
-    //   }
-    //   booking.status = BookingStatus.CANCELLED;
-    //   await booking.save();
-    //   const listing = await Listing.findById(booking.listing);
-    //   if (listing) {
-    //     listing.availableDates.push(booking.date);
-    //     await listing.save();
-    //   }
-    // }
     async cancelBooking(bookingId, userId) {
         const booking = await booking_model_1.Booking.findById(bookingId);
         if (!booking) {
@@ -117,7 +76,6 @@ class BookingService {
         if (!isTourist && !isGuide) {
             throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "Not authorized");
         }
-        // পেমেন্ট হয়ে গেলে সরাসরি ক্যান্সেল বন্ধ (নতুন লজিক)
         if (booking.paymentStatus === booking_interface_1.PaymentStatus.PAID) {
             throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Paid bookings cannot be cancelled directly. Please contact support for refund.");
         }
@@ -140,13 +98,10 @@ class BookingService {
         if (booking.guide.toString() !== guideId) {
             throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "Only the assigned guide can update status");
         }
-        // যদি অলরেডি পেইড হয়ে থাকে, তবে গাইড হুট করে ডিক্লাইন করতে পারবে না
         if (booking.paymentStatus === booking_interface_1.PaymentStatus.PAID && status === booking_interface_1.BookingStatus.DECLINED) {
             throw new AppError_1.default(http_status_codes_1.default.BAD_REQUEST, "Cannot decline a paid booking");
         }
-        // পেমেন্ট কোডের সাথে মিল রেখে: স্ট্যাটাস পেন্ডিং থাকলেই কেবল চেঞ্জ করা যাবে
         if (booking.status !== booking_interface_1.BookingStatus.PENDING && booking.paymentStatus !== booking_interface_1.PaymentStatus.PAID) {
-            // logic based on your previous controller
         }
         booking.status = status;
         await booking.save();
@@ -158,7 +113,6 @@ class BookingService {
         if (!booking) {
             throw new AppError_1.default(http_status_codes_1.default.NOT_FOUND, "Booking not found");
         }
-        // Fixed: Use _id.toString() for populated objects, with null check
         if (!booking.guide || booking.guide._id.toString() !== guideId) {
             throw new AppError_1.default(http_status_codes_1.default.FORBIDDEN, "Only guide can complete");
         }
@@ -171,9 +125,7 @@ class BookingService {
         return booking.populate("listing guide tourist");
     }
 }
-// Get all bookings for admin
 const getAllBookingsForAdmin = async () => {
-    // Get all bookings with populated data
     const bookings = await booking_model_1.Booking.find()
         .populate({
         path: "tourist",
@@ -189,13 +141,11 @@ const getAllBookingsForAdmin = async () => {
     })
         .sort({ createdAt: -1 })
         .lean();
-    // Calculate statistics
     const totalBookings = await booking_model_1.Booking.countDocuments();
     const paidBookings = await booking_model_1.Booking.countDocuments({ paymentStatus: "PAID" });
     const unpaidBookings = await booking_model_1.Booking.countDocuments({
         paymentStatus: { $in: ["UNPAID", "PENDING"] }
     });
-    // Calculate total revenue from paid bookings
     const totalRevenueResult = await booking_model_1.Booking.aggregate([
         { $match: { paymentStatus: "PAID" } },
         { $group: { _id: null, total: { $sum: "$totalPrice" } } }
@@ -209,22 +159,17 @@ const getAllBookingsForAdmin = async () => {
         totalRevenue
     };
 };
-// Get booking statistics for admin dashboard
 const getBookingStatsForAdmin = async () => {
-    // Booking status counts
     const pendingBookings = await booking_model_1.Booking.countDocuments({ status: "PENDING" });
     const confirmedBookings = await booking_model_1.Booking.countDocuments({ status: "CONFIRMED" });
     const completedBookings = await booking_model_1.Booking.countDocuments({ status: "COMPLETED" });
     const cancelledBookings = await booking_model_1.Booking.countDocuments({ status: "CANCELLED" });
-    // Payment status counts
     const paidBookings = await booking_model_1.Booking.countDocuments({ paymentStatus: "PAID" });
     const unpaidBookings = await booking_model_1.Booking.countDocuments({
         paymentStatus: { $in: ["UNPAID", "PENDING"] }
     });
-    // Revenue calculations
     const currentDate = new Date();
     const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    // Monthly revenue
     const monthlyRevenueResult = await booking_model_1.Booking.aggregate([
         {
             $match: {
@@ -317,16 +262,4 @@ exports.BookingServices = {
     updateBookingStatus,
     updatePaymentStatus,
 };
-// Get booking statistics (simple)
-// export const getBookingStats = async () => {
-//   const totalBookings = await Booking.countDocuments({});
-//   const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
-//   const pendingBookings = await Booking.countDocuments({ status: "PENDING" });
-//   return {
-//     totalBookings,
-//     paidBookings,
-//     pendingBookings,
-//     unpaidBookings: totalBookings - paidBookings,
-//   };
-// };
 exports.default = new BookingService();

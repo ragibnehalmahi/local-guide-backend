@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\guide\earnings.route.ts     
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };

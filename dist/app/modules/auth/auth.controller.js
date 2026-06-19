@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\auth\auth.controller.ts 
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -57,24 +58,8 @@ const credentialsLogin = (0, catchAsync_1.default)(async (req, res, next) => {
         data: loginInfo,
     });
 });
-// ✅ Refresh Token Controller
-// const refreshToken = catchAsync(async (req: Request, res: Response) => {
-//   const { refreshToken } = req.body;
-//   if (!refreshToken) {
-//     throw new AppError(httpStatus.BAD_REQUEST,"Refresh token missing", );
-//   }
-//   const result = await AuthService.getNewAccessToken(refreshToken);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "New access token generated",
-//     data: result,
-//   });
-// });
 const refreshToken = (0, catchAsync_1.default)(async (req, res) => {
-    // ৭১ নম্বর লাইনে এই পরিবর্তনটি করুন:
     const token = req.cookies?.refreshToken || req.body?.refreshToken;
-    // যদি টোকেন না থাকে তবে সুন্দরভাবে এরর হ্যান্ডেল করুন
     if (!token) {
         throw new AppError_1.default(http_status_codes_1.default.UNAUTHORIZED, "Refresh token not found in cookies or body!");
     }
@@ -98,25 +83,6 @@ const changePassword = (0, catchAsync_1.default)(async (req, res) => {
         data: result,
     });
 });
-// ✅ Logout Controller (Fully Fixed)
-// const logout = catchAsync(async (req: Request, res: Response) => {
-//  const refreshToken =
-//     req.body.refreshToken ||
-//     req.cookies?.refreshToken ||
-//     req.headers["x-refresh-token"];
-//   if (!refreshToken) {
-//     throw new AppError("Refresh token is required for logout", httpStatus.BAD_REQUEST);
-//   }
-//   const result = await AuthService.logout(refreshToken);
-//   // Clear cookies from browser
-//   clearAuthCookies(res);
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Logout successful",
-//     data: result,
-//   });
-// });
 const logout = (0, catchAsync_1.default)(async (req, res, next) => {
     res.clearCookie("accessToken", {
         httpOnly: true,

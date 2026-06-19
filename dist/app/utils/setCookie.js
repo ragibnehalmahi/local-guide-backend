@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-frontend-assignment\local-guide-backend\src\app\utils\setCookie.ts        
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setAuthCookie = void 0;
 const setAuthCookie = (res, tokenInfo) => {

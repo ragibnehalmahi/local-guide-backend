@@ -29,17 +29,8 @@ const createApp = () => {
     app.use((0, morgan_1.default)("dev"));
     // Cookies
     app.use((0, cookie_parser_1.default)());
-    // app.use(
-    //   "/api/payments/webhook",
-    //   express.raw({ type: "application/json" }),
-    //   (req: Request, res: Response, next: NextFunction) => {
-    //     next();
-    //   }
-    // );
     // Mount main api routes (this should include /api/payments except webhook)
     app.use("/api/v1/", routes_1.default);
-    // If you prefer to mount payments router separately (ensures webhook path handled above)
-    // app.use("/api/payments", PaymentRoutes);
     // Health check
     app.get("/health", (_req, res) => {
         res.json({ status: "ok" });

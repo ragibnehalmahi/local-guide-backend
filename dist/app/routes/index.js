@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\routes\index.ts           
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -14,6 +15,7 @@ const payment_route_1 = require("../modules/payments/payment.route");
 const tourist_routes_1 = require("../modules/tourist/tourist.routes");
 const meta_routes_1 = require("../modules/meta/meta.routes");
 const earnings_route_1 = __importDefault(require("../modules/guide/earnings.route"));
+const admin_route_1 = require("../modules/admin/admin.route");
 const router = express_1.default.Router();
 const moduleRoutes = [
     {
@@ -45,12 +47,11 @@ const moduleRoutes = [
         path: '/meta',
         route: meta_routes_1.MetaRouter
     },
+    { path: "/admin", route: admin_route_1.AdminRouter },
     {
         path: '/earnings',
         route: earnings_route_1.default
     }
 ];
 moduleRoutes.forEach(route => router.use(route.path, route.route));
-// router.use('/users', UserRouter);
-// router.use('/listings', listingRoutes);
 exports.default = router;

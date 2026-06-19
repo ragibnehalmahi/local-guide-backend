@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\bookings\booking.interface.ts           
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PaymentStatus = exports.BookingStatus = void 0;
 var BookingStatus;

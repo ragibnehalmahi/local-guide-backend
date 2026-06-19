@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\users\user.interface.ts        
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserStatus = exports.UserRole = void 0;
 var UserRole;

@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\listings\listing.model.ts 
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Listing = void 0;
 const mongoose_1 = require("mongoose");

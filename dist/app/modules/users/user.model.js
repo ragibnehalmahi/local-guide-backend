@@ -1,4 +1,5 @@
 "use strict";
+//local-guide-backend\src\app\modules\users\user.model.ts         
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
@@ -75,7 +76,6 @@ const UserSchema = new mongoose_1.Schema({
     versionKey: false,
     toJSON: {
         transform(doc, ret) {
-            // TypeScript fix for "operand of delete must be optional"
             delete ret.password;
             return ret;
         },
