@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\guide\earnings.controller.ts  
+
 import { Request, Response, NextFunction } from "express";
 import catchAsync from "../../utils/catchAsync";
 import GuideEarningsService from "./earnings.service";
@@ -9,7 +11,7 @@ import AppError from "../../utils/AppError";
 export const getEarningsStats = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const guideId = (req as AuthenticatedRequest).user!._id.toString();
-    
+
     const result = await GuideEarningsService.getEarningsStats(guideId);
     res.status(200).json(result);
   }

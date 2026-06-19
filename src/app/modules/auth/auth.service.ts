@@ -4,8 +4,8 @@ import bcrypt from "bcryptjs";
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 import httpStatus from "http-status-codes";
 import { Schema, model } from "mongoose";
-import AppError from "../../utils/AppError";  
-import { User } from "../users/user.model";  
+import AppError from "../../utils/AppError";
+import { User } from "../users/user.model";
 import { IUser, UserStatus } from "../users/user.interface";
 
 // Helper: JWT generator
@@ -31,9 +31,9 @@ const credentialsLogin = async (payload: Partial<IUser> | undefined | null) => {
   const existingUser = await User.findOne({ email }).select("+password");
 
   if (!existingUser) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid email or password"); 
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid email or password");
   }
-  
+
   if (existingUser.status !== UserStatus.ACTIVE) {
     throw new AppError(
       httpStatus.FORBIDDEN,
@@ -49,9 +49,9 @@ const credentialsLogin = async (payload: Partial<IUser> | undefined | null) => {
     (password as string).trim(),
     existingUser.password as string
   );
-  
+
   if (!isPasswordMatched) {
-    throw new AppError(httpStatus.BAD_REQUEST, "Invalid email or password"); 
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid email or password");
   }
 
   const jwtPayload = {

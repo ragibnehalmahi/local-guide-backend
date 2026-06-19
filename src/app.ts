@@ -8,7 +8,7 @@ import bodyParser from "body-parser";
 import router from "./app/routes";
 import notFoundHandler from "./app/middlewares/notFoundHandler";
 import globalErrorHandler from "./app/middlewares/globalErrorHandler";
- 
+
 const createApp = (): Application => {
   const app = express();
 
@@ -24,31 +24,23 @@ const createApp = (): Application => {
       allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
     })
   );
- app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+  app.use(express.json({ limit: "10mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "10mb" }));
   // Logging
   app.use(morgan("dev"));
 
   // Cookies
   app.use(cookieParser());
 
-   
-  // app.use(
-  //   "/api/payments/webhook",
-  //   express.raw({ type: "application/json" }),
-  //   (req: Request, res: Response, next: NextFunction) => {
-      
-  //     next();
-  //   }
-  // );
 
-   
+
+
+
 
   // Mount main api routes (this should include /api/payments except webhook)
   app.use("/api/v1/", router);
 
-  // If you prefer to mount payments router separately (ensures webhook path handled above)
-  // app.use("/api/payments", PaymentRoutes);
+
 
   // Health check
   app.get("/health", (_req: Request, res: Response) => {

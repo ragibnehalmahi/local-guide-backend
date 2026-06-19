@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\bookings\booking.service.ts             
+
 import httpStatus from "http-status-codes";
 import { IBooking, BookingStatus, PaymentStatus } from "./booking.interface";
 import { Booking } from "./booking.model";
@@ -26,7 +28,7 @@ class BookingService {
       throw new AppError(httpStatus.FORBIDDEN, "Only tourists can book");
     }
 
-    const isAvailable = listing.availableDates.some(d => 
+    const isAvailable = listing.availableDates.some(d =>
       d.toDateString() === date.toDateString()
     );
     if (!isAvailable) {
@@ -48,7 +50,7 @@ class BookingService {
       totalPrice
     });
 
-    listing.availableDates = listing.availableDates.filter(d => 
+    listing.availableDates = listing.availableDates.filter(d =>
       d.toDateString() !== date.toDateString()
     );
     await listing.save();
@@ -64,7 +66,7 @@ class BookingService {
       throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
     }
 
-    // Fixed: Use _id.toString() for populated objects, with null check
+
     if (!booking.tourist || !booking.guide || (booking.tourist._id.toString() !== userId && booking.guide._id.toString() !== userId)) {
       throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
     }
@@ -88,61 +90,13 @@ class BookingService {
     return bookings;
   }
 
-  // async updateBookingStatus(
-  //   bookingId: string,
-  //   guideId: string,
-  //   status: BookingStatus
-  // ): Promise<IBooking> {
-  //   console.log("DEBUG: updateBookingStatus called with bookingId:", bookingId, "guideId:", guideId, "status:", status);  // Optional debug log
-  //   const booking = await Booking.findById(bookingId);
-    
-  //   if (!booking) {
-  //     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
-  //   }
 
-  //   // Fixed: Use _id.toString() for populated objects, with null check
-  //   if (!booking.guide || booking.guide._id.toString() !== guideId) {
-  //     throw new AppError(httpStatus.FORBIDDEN, "Only guide can update status");
-  //   }
 
-  //   if (booking.status !== BookingStatus.PENDING) {
-  //     throw new AppError(httpStatus.BAD_REQUEST, "Can only update pending bookings");
-  //   }
 
-  //   booking.status = status;
-  //   await booking.save();
 
-  //   return booking.populate("listing guide tourist");
-  // }
-
-  // async cancelBooking(bookingId: string, userId: string): Promise<void> {
-  //   const booking = await Booking.findById(bookingId);
-    
-  //   if (!booking) {
-  //     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
-  //   }
-
-  //   // Fixed: Use _id.toString() for populated objects, with null check
-  //   if (!booking.tourist || !booking.guide || (booking.tourist._id.toString() !== userId && booking.guide._id.toString() !== userId)) {
-  //     throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
-  //   }
-
-  //   if (booking.status === BookingStatus.CANCELLED) {
-  //     throw new AppError(httpStatus.BAD_REQUEST, "Booking already cancelled");
-  //   }
-
-  //   booking.status = BookingStatus.CANCELLED;
-  //   await booking.save();
-
-  //   const listing = await Listing.findById(booking.listing);
-  //   if (listing) {
-  //     listing.availableDates.push(booking.date);
-  //     await listing.save();
-  //   }
-  // }
-async cancelBooking(bookingId: string, userId: string): Promise<void> {
+  async cancelBooking(bookingId: string, userId: string): Promise<void> {
     const booking = await Booking.findById(bookingId);
-    
+
     if (!booking) {
       throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
     }
@@ -153,10 +107,10 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
       throw new AppError(httpStatus.FORBIDDEN, "Not authorized");
     }
 
-    // পেমেন্ট হয়ে গেলে সরাসরি ক্যান্সেল বন্ধ (নতুন লজিক)
+
     if (booking.paymentStatus === PaymentStatus.PAID) {
       throw new AppError(
-        httpStatus.BAD_REQUEST, 
+        httpStatus.BAD_REQUEST,
         "Paid bookings cannot be cancelled directly. Please contact support for refund."
       );
     }
@@ -181,7 +135,7 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
     status: BookingStatus
   ): Promise<IBooking> {
     const booking = await Booking.findById(bookingId);
-    
+
     if (!booking) {
       throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
     }
@@ -190,14 +144,14 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
       throw new AppError(httpStatus.FORBIDDEN, "Only the assigned guide can update status");
     }
 
-    // যদি অলরেডি পেইড হয়ে থাকে, তবে গাইড হুট করে ডিক্লাইন করতে পারবে না
+
     if (booking.paymentStatus === PaymentStatus.PAID && status === BookingStatus.DECLINED) {
       throw new AppError(httpStatus.BAD_REQUEST, "Cannot decline a paid booking");
     }
 
-    // পেমেন্ট কোডের সাথে মিল রেখে: স্ট্যাটাস পেন্ডিং থাকলেই কেবল চেঞ্জ করা যাবে
+
     if (booking.status !== BookingStatus.PENDING && booking.paymentStatus !== PaymentStatus.PAID) {
-       // logic based on your previous controller
+
     }
 
     booking.status = status;
@@ -208,12 +162,12 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
   async completeBooking(bookingId: string, guideId: string): Promise<IBooking> {
     console.log("DEBUG: completeBooking service called with bookingId:", bookingId, "guideId:", guideId);  // Optional debug log
     const booking = await Booking.findById(bookingId);
-    
+
     if (!booking) {
       throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
     }
 
-    // Fixed: Use _id.toString() for populated objects, with null check
+
     if (!booking.guide || booking.guide._id.toString() !== guideId) {
       throw new AppError(httpStatus.FORBIDDEN, "Only guide can complete");
     }
@@ -229,11 +183,11 @@ async cancelBooking(bookingId: string, userId: string): Promise<void> {
     return booking.populate("listing guide tourist");
   }
 }
- 
 
- // Get all bookings for admin
+
+
 const getAllBookingsForAdmin = async () => {
-  // Get all bookings with populated data
+
   const bookings = await Booking.find()
     .populate({
       path: "tourist",
@@ -250,19 +204,19 @@ const getAllBookingsForAdmin = async () => {
     .sort({ createdAt: -1 })
     .lean();
 
-  // Calculate statistics
+
   const totalBookings = await Booking.countDocuments();
   const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
-  const unpaidBookings = await Booking.countDocuments({ 
-    paymentStatus: { $in: ["UNPAID", "PENDING"] } 
+  const unpaidBookings = await Booking.countDocuments({
+    paymentStatus: { $in: ["UNPAID", "PENDING"] }
   });
-  
-  // Calculate total revenue from paid bookings
+
+
   const totalRevenueResult = await Booking.aggregate([
     { $match: { paymentStatus: "PAID" } },
     { $group: { _id: null, total: { $sum: "$totalPrice" } } }
   ]);
-  
+
   const totalRevenue = totalRevenueResult[0]?.total || 0;
 
   return {
@@ -274,31 +228,31 @@ const getAllBookingsForAdmin = async () => {
   };
 };
 
-// Get booking statistics for admin dashboard
+
 export const getBookingStatsForAdmin = async () => {
-  // Booking status counts
+
   const pendingBookings = await Booking.countDocuments({ status: "PENDING" });
   const confirmedBookings = await Booking.countDocuments({ status: "CONFIRMED" });
   const completedBookings = await Booking.countDocuments({ status: "COMPLETED" });
   const cancelledBookings = await Booking.countDocuments({ status: "CANCELLED" });
 
-  // Payment status counts
+
   const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
-  const unpaidBookings = await Booking.countDocuments({ 
-    paymentStatus: { $in: ["UNPAID", "PENDING"] } 
+  const unpaidBookings = await Booking.countDocuments({
+    paymentStatus: { $in: ["UNPAID", "PENDING"] }
   });
 
-  // Revenue calculations
+
   const currentDate = new Date();
   const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  
-  // Monthly revenue
+
+
   const monthlyRevenueResult = await Booking.aggregate([
-    { 
-      $match: { 
+    {
+      $match: {
         paymentStatus: "PAID",
         createdAt: { $gte: startOfMonth }
-      } 
+      }
     },
     { $group: { _id: null, total: { $sum: "$totalPrice" } } }
   ]);
@@ -312,7 +266,7 @@ export const getBookingStatsForAdmin = async () => {
   // Today's bookings
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
-  
+
   const todayBookings = await Booking.countDocuments({
     createdAt: { $gte: startOfDay }
   });
@@ -362,7 +316,7 @@ const getBookingByIdForAdmin = async (bookingId: string) => {
 // Update booking status
 const updateBookingStatus = async (bookingId: string, status: BookingStatus) => {
   const booking = await Booking.findById(bookingId);
-  
+
   if (!booking) {
     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
   }
@@ -383,7 +337,7 @@ const updateBookingStatus = async (bookingId: string, status: BookingStatus) => 
 // Update payment status
 const updatePaymentStatus = async (bookingId: string, paymentStatus: PaymentStatus) => {
   const booking = await Booking.findById(bookingId);
-  
+
   if (!booking) {
     throw new AppError(httpStatus.NOT_FOUND, "Booking not found");
   }
@@ -401,19 +355,6 @@ export const BookingServices = {
   updateBookingStatus,
   updatePaymentStatus,
 };
- 
 
-// Get booking statistics (simple)
-// export const getBookingStats = async () => {
-//   const totalBookings = await Booking.countDocuments({});
-//   const paidBookings = await Booking.countDocuments({ paymentStatus: "PAID" });
-//   const pendingBookings = await Booking.countDocuments({ status: "PENDING" });
 
-//   return {
-//     totalBookings,
-//     paidBookings,
-//     pendingBookings,
-//     unpaidBookings: totalBookings - paidBookings,
-//   };
-// };
 export default new BookingService();

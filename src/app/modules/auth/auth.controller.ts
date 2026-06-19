@@ -1,9 +1,11 @@
- import { Request, Response, NextFunction } from "express";
+//local-guide-backend\src\app\modules\auth\auth.controller.ts 
+
+import { Request, Response, NextFunction } from "express";
 import httpStatus from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { AuthService } from "./auth.service";
-import AppError from "../../utils/AppError";  
+import AppError from "../../utils/AppError";
 import { createUserTokens } from "../../utils/userToken";
 
 // Cookie helper
@@ -49,7 +51,7 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
   console.log("🎯 Controller: req.body:", req.body);
 
   if (!req.body?.email || !req.body?.password) {
-    throw new AppError(httpStatus.BAD_REQUEST,"Email and password are required", );
+    throw new AppError(httpStatus.BAD_REQUEST, "Email and password are required",);
   }
 
   const loginInfo = await AuthService.credentialsLogin(req.body);
@@ -66,28 +68,12 @@ const credentialsLogin = catchAsync(async (req: Request, res: Response, next: Ne
   });
 });
 
-// ✅ Refresh Token Controller
-// const refreshToken = catchAsync(async (req: Request, res: Response) => {
-//   const { refreshToken } = req.body;
 
-//   if (!refreshToken) {
-//     throw new AppError(httpStatus.BAD_REQUEST,"Refresh token missing", );
-//   }
-
-//   const result = await AuthService.getNewAccessToken(refreshToken);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "New access token generated",
-//     data: result,
-//   });
-// });
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
-  // ৭১ নম্বর লাইনে এই পরিবর্তনটি করুন:
+
   const token = req.cookies?.refreshToken || req.body?.refreshToken;
 
-  // যদি টোকেন না থাকে তবে সুন্দরভাবে এরর হ্যান্ডেল করুন
+
   if (!token) {
     throw new AppError(httpStatus.UNAUTHORIZED, "Refresh token not found in cookies or body!");
   }
@@ -116,48 +102,27 @@ const changePassword = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-// ✅ Logout Controller (Fully Fixed)
-// const logout = catchAsync(async (req: Request, res: Response) => {
-//  const refreshToken =
-//     req.body.refreshToken ||
-//     req.cookies?.refreshToken ||
-//     req.headers["x-refresh-token"];
 
-//   if (!refreshToken) {
-//     throw new AppError("Refresh token is required for logout", httpStatus.BAD_REQUEST);
-//   }
 
-//   const result = await AuthService.logout(refreshToken);
-
-//   // Clear cookies from browser
-//   clearAuthCookies(res);
-
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: "Logout successful",
-//     data: result,
-//   });
-// });
 const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
 
-    res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    })
-    res.clearCookie("refreshToken", {
-        httpOnly: true,
-        secure: false,
-        sameSite: "lax"
-    })
+  res.clearCookie("accessToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax"
+  })
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax"
+  })
 
-    sendResponse(res, {
-        success: true,
-        statusCode: httpStatus.OK,
-        message: "User Logged Out Successfully",
-        data: null,
-    })
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User Logged Out Successfully",
+    data: null,
+  })
 })
 export const AuthController = {
   credentialsLogin,

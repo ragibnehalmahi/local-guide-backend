@@ -1,7 +1,9 @@
+//local-guide-backend\src\app\modules\users\user.interface.ts        
+
 import { Types } from "mongoose";
 
 export enum UserRole {
-   SUPER_ADMIN = "super_admin",
+  SUPER_ADMIN = "super_admin",
   ADMIN = "admin",
   TOURIST = "tourist",
   GUIDE = "guide"
@@ -45,7 +47,7 @@ export interface IUser {
   status?: UserStatus;
   isDeleted?: boolean;
   isVerified?: boolean;
-  
+
   // Guide-specific fields
   expertise?: string[];
   dailyRate?: number;
@@ -53,15 +55,15 @@ export interface IUser {
   totalReviews?: number;
   yearsOfExperience?: number;
   availableDates?: Date[];
-  
+
   // Tourist-specific fields
   travelPreferences?: string[];
   wishlist?: Types.ObjectId[];
-  
+
   // Common
   authProviders?: IAuthProvider[];
   location?: IUserLocation;
-  
+
   // Methods
   comparePassword?(candidatePassword: string): Promise<boolean>;
 }

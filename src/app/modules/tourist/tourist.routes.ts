@@ -10,6 +10,6 @@ const router = express.Router();
 router.use(authGuard(UserRole.TOURIST));
 
 // Dashboard statistics
-router.get("/dashboard/stats", TouristController.getTouristDashboardStats);
+router.get("/dashboard/stats", authGuard(UserRole.TOURIST), TouristController.getTouristDashboardStats);
 
 export const TouristRoutes = router;

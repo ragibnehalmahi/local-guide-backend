@@ -1,11 +1,13 @@
+//local-guide-backend\src\app\modules\bookings\booking.controller.ts              
+
 import { Request, Response } from "express";
 import httpStatus from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import  bookingService, { BookingServices     } from "./booking.service";
+import bookingService, { BookingServices } from "./booking.service";
 import { BookingStatus } from "./booking.interface";
 import AppError from "../../utils/AppError";
- 
+
 
 export const createBooking = catchAsync(async (req: Request, res: Response) => {
   const touristId = (req as any).user._id;
@@ -123,7 +125,7 @@ export const completeBooking = catchAsync(async (req: Request, res: Response) =>
 // Get all bookings for admin
 const getAllBookingsForAdmin = catchAsync(async (req: Request, res: Response) => {
   const result: any = await BookingServices.getAllBookingsForAdmin();
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -141,7 +143,7 @@ const getAllBookingsForAdmin = catchAsync(async (req: Request, res: Response) =>
 // Get booking statistics for admin
 const getBookingStatsForAdmin = catchAsync(async (req: Request, res: Response) => {
   const stats = await BookingServices.getBookingStatsForAdmin();
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -153,9 +155,9 @@ const getBookingStatsForAdmin = catchAsync(async (req: Request, res: Response) =
 // Get booking by ID for admin
 const getBookingByIdForAdmin = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  
+
   const booking = await BookingServices.getBookingByIdForAdmin(id);
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -168,18 +170,18 @@ const getBookingByIdForAdmin = catchAsync(async (req: Request, res: Response) =>
 const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { status } = req.body;
-  
+
   if (!status) {
     throw new AppError(httpStatus.BAD_REQUEST, "Status is required");
   }
-  
+
   const validStatuses = ["PENDING", "CONFIRMED", "COMPLETED", "CANCELLED"];
   if (!validStatuses.includes(status)) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid status value");
   }
-  
+
   const updatedBooking = await BookingServices.updateBookingStatus(id, status);
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -192,18 +194,18 @@ const updateBookingStatus = catchAsync(async (req: Request, res: Response) => {
 const updatePaymentStatus = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { paymentStatus } = req.body;
-  
+
   if (!paymentStatus) {
     throw new AppError(httpStatus.BAD_REQUEST, "Payment status is required");
   }
-  
+
   const validPaymentStatuses = ["PAID", "UNPAID", "REFUNDED"];
   if (!validPaymentStatuses.includes(paymentStatus)) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid payment status value");
   }
-  
+
   const updatedBooking = await BookingServices.updatePaymentStatus(id, paymentStatus);
-  
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -212,15 +214,9 @@ const updatePaymentStatus = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-export const BookingControllers = {
-  getAllBookingsForAdmin,
-  getBookingStatsForAdmin,
-  getBookingByIdForAdmin,
-  updateBookingStatus,
-  updatePaymentStatus,
-};
 
- 
+
+
 export const BookingController = {
   createBooking,
   getBookingById,
@@ -229,6 +225,10 @@ export const BookingController = {
   confirmBooking,
   declineBooking,
   cancelBooking,
-  completeBooking,getAllBookingsForAdmin,
- 
+  completeBooking, getAllBookingsForAdmin,
+  getBookingStatsForAdmin,
+  getBookingByIdForAdmin,
+  updateBookingStatus,
+  updatePaymentStatus,
+
 };

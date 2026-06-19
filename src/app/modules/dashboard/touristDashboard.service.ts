@@ -1,9 +1,9 @@
 import { BookingDocument } from './../bookings/booking.model';
 // src/modules/dashboard/touristDashboard.service.ts
 import { Types } from 'mongoose';
-import {Booking }from   '../bookings/booking.model';
-import {Review} from '../reviews/review.model';
-import{ User} from '../users/user.model';
+import { Booking } from '../bookings/booking.model';
+import { Review } from '../reviews/review.model';
+import { User } from '../users/user.model';
 
 interface DashboardStats {
   totalBookings: number;
@@ -16,39 +16,37 @@ interface DashboardStats {
 }
 
 export class TouristDashboardService {
-  /**
-   * Get tourist dashboard statistics
-   */
+
   async getTouristDashboardStats(userId: Types.ObjectId): Promise<{
     success: boolean;
     data: DashboardStats;
     message: string;
   }> {
     try {
-      // Convert userId to ObjectId if it's a string
-      const touristId = typeof userId === 'string' 
-        ? new Types.ObjectId(userId) 
+
+      const touristId = typeof userId === 'string'
+        ? new Types.ObjectId(userId)
         : userId;
 
-      // 1. Get total bookings count
+
       const totalBookings = await Booking.countDocuments({
         tourist: touristId,
       });
 
-      // 2. Get upcoming tours (confirmed bookings with future dates)
+
       const upcomingTours = await Booking.countDocuments({
         tourist: touristId,
         status: 'confirmed',
         date: { $gte: new Date() },
       });
 
-      // 3. Get completed tours
+
       const completedTours = await Booking.countDocuments({
         tourist: touristId,
         status: 'completed',
       });
 
-      // 4. Calculate total spent (sum of all completed booking amounts)
+
       const totalSpentAggregation = await Booking.aggregate([
         {
           $match: {
@@ -67,7 +65,7 @@ export class TouristDashboardService {
 
       const totalSpent = totalSpentAggregation[0]?.total || 0;
 
-      // 5. Get wishlist count
+
       const tourist = await User.findById(touristId)
         .select('wishlist')
         .populate({
@@ -77,7 +75,7 @@ export class TouristDashboardService {
 
       const wishlistCount = tourist?.wishlist?.length || 0;
 
-      // 6. Calculate average guide rating given by tourist
+
       const reviewAggregation = await Review.aggregate([
         {
           $match: {
@@ -94,7 +92,7 @@ export class TouristDashboardService {
 
       const averageGuideRating = reviewAggregation[0]?.averageRating || 0;
 
-      // 7. Get recent bookings (last 5 bookings)
+
       const recentBookings = await Booking.find({
         tourist: touristId,
       })
@@ -111,7 +109,7 @@ export class TouristDashboardService {
         .select('status date totalPrice createdAt')
         .lean() as any[];
 
-      // Format recent bookings
+
       const formattedRecentBookings = recentBookings.map((booking) => ({
         id: booking._id,
         tourTitle: booking.listing?.title || 'N/A',
@@ -141,8 +139,8 @@ export class TouristDashboardService {
 
     } catch (error) {
       console.error('Error in getTouristDashboardStats:', error);
-      
-      // Return default stats in case of error
+
+
       const defaultStats: DashboardStats = {
         totalBookings: 0,
         upcomingTours: 0,

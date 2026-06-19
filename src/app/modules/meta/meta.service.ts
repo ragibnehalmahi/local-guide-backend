@@ -1,32 +1,19 @@
+//local-guide-backend\src\app\modules\meta\meta.service.ts    
+
 import { Booking } from "../bookings/booking.model";
 import { Listing } from "../listings/listing.model";
 import { Review } from "../reviews/review.model";
 import { User } from "../users/user.model";
 
-// const getDashboardStats = async (userId: string, role: string) => {
-//   if (role === "guide") {
-//     const listings = await Listing.countDocuments({ guide: userId });
-//     const bookings = await Booking.countDocuments({ guide: userId });
-//     const revenue = await Booking.aggregate([
-//       { $match: { guide: userId, paymentStatus: "PAID" } },
-//       { $group: { _id: null, total: { $sum: "$totalPrice" } } },
-//     ]);
-//     return { listings, bookings, revenue: revenue[0]?.total || 0 };
-//   } else if (role === "tourist") {
-//     const bookings = await Booking.countDocuments({ tourist: userId });
-//     const wishlist = await User.findById(userId).select("wishlist");
-//     return { bookings, wishlistCount: wishlist?.wishlist?.length || 0 };
-//   } else if (role === "admin") {
-//     const users = await User.countDocuments();
-//     const listings = await Listing.countDocuments();
-//     const bookings = await Booking.countDocuments();
-//     return { users, listings, bookings };
-//   }
-//   return {};
-// };
- 
+
+
+
+
+import { Types } from "mongoose";
 
 const getDashboardStats = async (userId: string, role: string) => {
+  const userObjectId = new Types.ObjectId(userId);
+
   if (role === "guide") {
     // 1. My Listings count
     const totalListings = await Listing.countDocuments({ guide: userId });
@@ -36,20 +23,20 @@ const getDashboardStats = async (userId: string, role: string) => {
 
     // 3. Total Earnings (from completed tours)
     const revenue = await Booking.aggregate([
-      { 
-        $match: { 
-          guide: userId, 
+      {
+        $match: {
+          guide: userObjectId,
           status: "COMPLETED",
-          paymentStatus: "PAID" 
-        } 
+          paymentStatus: "PAID"
+        }
       },
       { $group: { _id: null, total: { $sum: "$totalPrice" } } },
     ]);
 
     // 4. Pending Requests
-    const pendingBookings = await Booking.countDocuments({ 
-      guide: userId, 
-      status: "PENDING" 
+    const pendingBookings = await Booking.countDocuments({
+      guide: userId,
+      status: "PENDING"
     });
 
     // 5. Upcoming Bookings (confirmed and future date)
@@ -61,7 +48,7 @@ const getDashboardStats = async (userId: string, role: string) => {
 
     // 6. Average Rating (from Review model)
     const reviewStats = await Review.aggregate([
-      { $match: { guide: userId } },
+      { $match: { guide: userObjectId } },
       { $group: { _id: null, avgRating: { $avg: "$rating" } } }
     ]);
 
@@ -79,9 +66,9 @@ const getDashboardStats = async (userId: string, role: string) => {
       .populate("tourist", "name")
       .lean();
 
-    return { 
-      totalListings, 
-      totalBookings, 
+    return {
+      totalListings,
+      totalBookings,
       totalEarnings: revenue[0]?.total || 0,
       pendingBookings,
       upcomingTours,
@@ -92,12 +79,12 @@ const getDashboardStats = async (userId: string, role: string) => {
 
   } else if (role === "tourist") {
     const totalBookings = await Booking.countDocuments({ tourist: userId });
-    
+
     // Total Spent
     const totalSpentAggregation = await Booking.aggregate([
       {
         $match: {
-          tourist: userId,
+          tourist: userObjectId,
           paymentStatus: 'PAID',
         },
       },
@@ -138,8 +125,8 @@ const getDashboardStats = async (userId: string, role: string) => {
       })
       .lean();
 
-    return { 
-      totalBookings, 
+    return {
+      totalBookings,
       totalSpent: totalSpentAggregation[0]?.total || 0,
       upcomingTours,
       completedTours,
@@ -153,7 +140,7 @@ const getDashboardStats = async (userId: string, role: string) => {
     const totalTourists = await User.countDocuments({ role: "TOURIST" });
     const totalListings = await Listing.countDocuments();
     const totalBookings = await Booking.countDocuments();
-    
+
     const revenueStats = await Booking.aggregate([
       { $match: { paymentStatus: "PAID" } },
       { $group: { _id: null, total: { $sum: "$totalPrice" } } },
@@ -173,12 +160,12 @@ const getDashboardStats = async (userId: string, role: string) => {
       .populate("guide", "name")
       .lean();
 
-    return { 
-      totalUsers, 
-      totalGuides, 
+    return {
+      totalUsers,
+      totalGuides,
       totalTourists,
-      totalListings, 
-      totalBookings, 
+      totalListings,
+      totalBookings,
       totalRevenue: revenueStats[0]?.total || 0,
       recentSignups,
       recentBookings
@@ -190,4 +177,3 @@ const getDashboardStats = async (userId: string, role: string) => {
 export const MetaService = {
   getDashboardStats,
 };
- 

@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\guide\earnings.validation.ts
+
 import { z } from "zod";
 
 export const guideEarningsValidation = {

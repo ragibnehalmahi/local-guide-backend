@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\listings\listing.model.ts 
+
 import { Schema, model, Document } from "mongoose";
 import { IListing, IListingLocation, ListingCategory } from "./listing.interface";
 
@@ -92,4 +94,4 @@ ListingSchema.index({ guide: 1, active: 1 });
 ListingSchema.index({ category: 1, active: 1 });
 ListingSchema.index({ "location.city": 1, active: 1 });
 
-export const Listing = model<ListingDocument>("Listing", ListingSchema);
+export const Listing = model<ListingDocument>("Listing", ListingSchema);

@@ -1,7 +1,8 @@
+// src/app/modules/users/user.service.ts
 import { UserRole, UserStatus } from './user.interface';
 import httpStatus from "http-status-codes";
 import bcrypt from "bcryptjs";
-import AppError from "../../utils/AppError";  
+import AppError from "../../utils/AppError";
 import { IUser } from "./user.interface";
 import { User } from "./user.model";
 import { Listing } from "../listings/listing.model";
@@ -81,7 +82,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
   }
 
   const newUpdatedUser = await User.findByIdAndUpdate(
-    userId, 
+    userId,
     { $set: payload },
     { new: true, runValidators: true }
   ).select("-password");
@@ -94,7 +95,7 @@ const updateUser = async (userId: string, payload: Partial<IUser>, decodedToken:
  */
 const getMyProfile = async (userId: string): Promise<IUser> => {
   const user = await User.findById(userId).select("-password");
-  
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
@@ -111,29 +112,29 @@ const getMyProfile = async (userId: string): Promise<IUser> => {
  */
 const getAllUsers = async (query: any) => {
   const { search, role, status, page = 1, limit = 10 } = query;
-  
+
   const filter: any = { isDeleted: false };
-  
+
   if (search) {
     filter.$or = [
       { name: { $regex: search, $options: "i" } },
       { email: { $regex: search, $options: "i" } }
     ];
   }
-  
+
   if (role) filter.role = role;
   if (status) filter.status = status;
-  
+
   const skip = (Number(page) - 1) * Number(limit);
-  
+
   const users = await User.find(filter)
     .select("-password")
     .skip(skip)
     .limit(Number(limit))
     .sort({ createdAt: -1 });
-  
+
   const total = await User.countDocuments(filter);
-  
+
   return {
     data: users,
     meta: {
@@ -150,44 +151,44 @@ const getAllUsers = async (query: any) => {
  */
 const getAllGuides = async (query: any) => {
   const { city, expertise, minRating, maxPrice, language, search } = query;
-  
-  const filter: any = { 
-    role: UserRole.GUIDE, 
+
+  const filter: any = {
+    role: UserRole.GUIDE,
     status: UserStatus.ACTIVE,
-    isVerified: true 
+    isVerified: true
   };
-  
+
   if (city && filter.location) {
     filter['location.city'] = { $regex: city, $options: "i" };
   }
-  
+
   if (expertise) {
     filter.expertise = { $in: expertise.split(",") };
   }
-  
+
   if (minRating) {
     filter.rating = { $gte: Number(minRating) };
   }
-  
+
   if (maxPrice) {
     filter.dailyRate = { $lte: Number(maxPrice) };
   }
-  
+
   if (language) {
     filter.languages = { $in: [language] };
   }
-  
+
   if (search) {
     filter.$or = [
       { name: { $regex: search, $options: "i" } },
       { bio: { $regex: search, $options: "i" } }
     ];
   }
-  
+
   const guides = await User.find(filter)
     .select("-password -wishlist -travelPreferences -authProviders")
     .sort({ rating: -1, totalReviews: -1 });
-  
+
   return guides;
 };
 
@@ -198,11 +199,11 @@ const searchUserByEmail = async (email: string): Promise<IUser | null> => {
   if (!email) {
     throw new AppError(httpStatus.BAD_REQUEST, "Email is required");
   }
-  
-  const user = await User.findOne({ 
-    email: { $regex: new RegExp(`^${email}$`, "i") } 
+
+  const user = await User.findOne({
+    email: { $regex: new RegExp(`^${email}$`, "i") }
   }).select("-password");
-  
+
   return user;
 };
 
@@ -210,22 +211,45 @@ const searchUserByEmail = async (email: string): Promise<IUser | null> => {
  * Update user status (Admin only)
  */
 const updateUserStatus = async (
-  userId: string, 
+  userId: string,
   status: UserStatus
 ): Promise<IUser> => {
   const user = await User.findById(userId);
-  
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
-  
+
   if (!Object.values(UserStatus).includes(status)) {
     throw new AppError(httpStatus.BAD_REQUEST, "Invalid status value");
   }
-  
+
   user.status = status;
   await user.save();
-  
+
+  return user;
+};
+
+/**
+ * Update user role (Admin only)
+ */
+const updateUserRole = async (
+  userId: string,
+  role: UserRole
+): Promise<IUser> => {
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (!Object.values(UserRole).includes(role)) {
+    throw new AppError(httpStatus.BAD_REQUEST, "Invalid role value");
+  }
+
+  user.role = role;
+  await user.save();
+
   return user;
 };
 
@@ -243,7 +267,7 @@ const getAllListingsFromDB = async (query: Record<string, unknown>) => {
   }
 
   const searchableFields = ['title', 'location.city', 'category'];
-  
+
   const searchQuery = Listing.find({
     $or: searchableFields.map((field) => ({
       [field]: { $regex: searchTerm, $options: 'i' },
@@ -278,22 +302,22 @@ const getAllListingsFromDB = async (query: Record<string, unknown>) => {
  */
 const addToWishlist = async (userId: string, tourId: string) => {
   const user = await User.findById(userId);
-  
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
-  
+
   if (user.role !== UserRole.TOURIST) {
     throw new AppError(httpStatus.FORBIDDEN, "Only tourists can add to wishlist");
   }
-  
+
   if (user.wishlist?.includes(tourId as any)) {
     throw new AppError(httpStatus.BAD_REQUEST, "Tour already in wishlist");
   }
-  
+
   user.wishlist = [...(user.wishlist || []), tourId as any];
   await user.save();
-  
+
   return user.wishlist;
 };
 
@@ -302,17 +326,17 @@ const addToWishlist = async (userId: string, tourId: string) => {
  */
 const removeFromWishlist = async (userId: string, tourId: string) => {
   const user = await User.findById(userId);
-  
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
-  
-  user.wishlist = user.wishlist?.filter(id => 
+
+  user.wishlist = user.wishlist?.filter(id =>
     id.toString() !== tourId
   ) || [];
-  
+
   await user.save();
-  
+
   return user.wishlist;
 };
 
@@ -321,14 +345,37 @@ const removeFromWishlist = async (userId: string, tourId: string) => {
  */
 const getUserById = async (userId: string) => {
   const user = await User.findById(userId).select("-password");
-  
+
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, "User not found");
   }
-  
+
   return user;
 };
+const getWishlistWithDetails = async (userId: string) => {
+  const user = await User.findById(userId).select("wishlist");
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found");
+  }
 
+  const wishlistIds = user.wishlist || [];
+  if (wishlistIds.length === 0) {
+    return [];
+  }
+
+
+  const listings = await Listing.find({
+    _id: { $in: wishlistIds },
+    active: true,
+  }).populate("guide", "name profilePicture rating");
+
+
+  const orderedListings = wishlistIds
+    .map(id => listings.find(l => l._id.toString() === id.toString()))
+    .filter(Boolean);
+
+  return orderedListings;
+};
 export const UserServices = {
   createUser,
   updateUser,
@@ -337,8 +384,9 @@ export const UserServices = {
   getAllGuides,
   searchUserByEmail,
   updateUserStatus,
+  updateUserRole,
   addToWishlist,
   removeFromWishlist,
   getUserById,
-  getAllListingsFromDB
+  getAllListingsFromDB, getWishlistWithDetails
 };

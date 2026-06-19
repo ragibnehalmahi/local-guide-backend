@@ -1,9 +1,11 @@
+//local-guide-backend\src\app\modules\meta\meta.controller.ts   
+
 import { Request, Response } from "express";
 import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import httpStatus from "http-status-codes";
 import { MetaService } from "./meta.service";
- 
+
 
 const getDashboardStats = catchAsync(async (req: Request, res: Response) => {
   const userId = (req as any).user._id;

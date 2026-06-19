@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\sslCommerz\sslCommerz.interface.ts        
+
 export interface ISSLCommerz {
   amount: number;
   transactionId: string;

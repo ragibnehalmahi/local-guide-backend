@@ -1,3 +1,5 @@
+//local-guide-frontend-assignment\local-guide-backend\src\app\utils\setCookie.ts        
+
 import { Response } from "express";
 
 export interface AuthTokens {
@@ -18,7 +20,7 @@ export const setAuthCookie = (res: Response, tokenInfo: AuthTokens) => {
     res.cookie("refreshToken", tokenInfo.refreshToken, {
       httpOnly: true,
       secure: true,
-       sameSite: "none",
+      sameSite: "none",
     });
   }
 };

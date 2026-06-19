@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\listings\listing.route.ts 
+
 import express from "express";
 import { ListingController } from "./listing.controller";
 import { authGuard } from "../../middlewares/authGuard";

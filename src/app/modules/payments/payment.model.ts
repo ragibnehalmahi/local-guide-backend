@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\payments\payment.model.ts       
+
 import { Schema, model } from "mongoose";
 import { IPayment, PaymentStatus } from "./payment.interface";
 

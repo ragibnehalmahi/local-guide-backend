@@ -1,4 +1,5 @@
 // utils/QueryBuilder.ts
+//local-guide-backend\src\app\utils\QueryBuilder.ts           
 import { Query } from "mongoose";
 
 export class QueryBuilder<T> {

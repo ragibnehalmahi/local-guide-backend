@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\utils\jwt.ts              
+
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
 
 export const generateToken = (payload: JwtPayload, secret: string, expiresIn: string | number) => {

@@ -21,7 +21,11 @@ router.get(
   authGuard(UserRole.TOURIST, UserRole.GUIDE, UserRole.ADMIN),
   UserControllers.getMyProfile
 );
-
+router.get(
+  "/wishlist",
+  authGuard(UserRole.TOURIST),
+  UserControllers.getWishlist
+);
 router.patch(
   "/me",
   authGuard(UserRole.TOURIST, UserRole.GUIDE, UserRole.ADMIN),
@@ -64,6 +68,12 @@ router.patch(
   "/:id/status",
   authGuard(UserRole.ADMIN),
   UserControllers.updateUserStatus
+);
+
+router.patch(
+  "/:id/role",
+  authGuard(UserRole.ADMIN),
+  UserControllers.updateUserRole
 );
 
 router.get(

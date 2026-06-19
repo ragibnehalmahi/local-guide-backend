@@ -1,5 +1,7 @@
+//local-guide-frontend-assignment\local-guide-backend\src\database.ts       
+
 import mongoose from 'mongoose';
- 
+
 
 export default async function connectDB() {
   try {

@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\users\user.model.ts         
+
 import { Schema, model, Document } from "mongoose";
 import { IUser, IUserLocation, UserRole, UserStatus } from "./user.interface";
 
@@ -96,7 +98,7 @@ const UserSchema = new Schema<UserDocument>(
     versionKey: false,
     toJSON: {
       transform(doc, ret) {
-        // TypeScript fix for "operand of delete must be optional"
+
         delete (ret as any).password;
         return ret;
       },

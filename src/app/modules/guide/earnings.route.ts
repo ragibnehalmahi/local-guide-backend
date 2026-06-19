@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\guide\earnings.route.ts     
+
 import { Router } from "express";
 import { authGuard } from "../../middlewares/authGuard";
 import { UserRole } from "../users/user.interface";

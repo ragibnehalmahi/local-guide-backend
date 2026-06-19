@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\config\config.ts  
+
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -19,7 +21,7 @@ const config = {
   refresh_token_secret: process.env.JWT_REFRESH_SECRET || "refresh_secret",
   refresh_token_expires: process.env.JWT_REFRESH_EXPIRES_IN || "30d",
 
-   
+
 };
 
 export default config;

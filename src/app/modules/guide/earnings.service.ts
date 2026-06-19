@@ -1,9 +1,11 @@
+//local-guide-backend\src\app\modules\guide\earnings.service.ts 
+
 import { Request, Response } from "express";
 import { Booking } from "../bookings/booking.model";
 import { Types } from "mongoose";
 import { IGuideEarningsFilter } from "./earnings.interface";
 import { paginate } from "../../utils/pagination";
- 
+
 
 export class GuideEarningsService {
   static async getEarningsStats(guideId: string) {

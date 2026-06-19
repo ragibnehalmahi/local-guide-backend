@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\bookings\booking.validation.ts              
+
 import { z } from "zod";
 
 export const createBookingSchema = z.object({

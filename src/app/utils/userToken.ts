@@ -1,6 +1,8 @@
+//local-guide-frontend-assignment\local-guide-backend\src\app\utils\userToken.ts      
+
 import { JwtPayload } from "jsonwebtoken";
-import { IUser } from "../modules/users/user.interface";  
-import { generateToken } from "./jwt";  
+import { IUser } from "../modules/users/user.interface";
+import { generateToken } from "./jwt";
 
 export const createUserTokens = (user: Partial<IUser>) => {
   const jwtPayload: JwtPayload = {

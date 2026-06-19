@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\utils\AppError.ts    
+
 class AppError extends Error {
   public statusCode: number;
   public isOperational: boolean;

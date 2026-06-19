@@ -16,23 +16,23 @@ export const createListingSchema = z.object({
     // Basic info
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
-    
+
     // Numbers
     price: z.number().positive("Price must be positive"),
     durationHours: z.number().int().positive("Duration is required"),
     maxGroupSize: z.number().int().positive("Group size is required"),
-    
+
     // Strings
     meetingPoint: z.string().min(1, "Meeting point is required"),
     category: z.nativeEnum(ListingCategory),
-    
+
     // Arrays
     languages: z.array(z.string()).min(1, "At least one language required"),
     images: z.array(z.string()).min(1, "At least one image required").max(10, "Maximum 10 images"),
-    
+
     // Location object
     location: locationSchema,
-    
+
     // Optional
     availableDates: z.array(z.string()).optional().default([])
   })

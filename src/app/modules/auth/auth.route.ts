@@ -1,7 +1,9 @@
+//local-guide-backend\src\app\modules\auth\auth.route.ts            
+
 import express from "express";
 import { AuthController } from "./auth.controller";
-import  {authGuard } from "../../middlewares/authGuard";  
-import { UserRole } from "../users/user.interface";  
+import { authGuard } from "../../middlewares/authGuard";
+import { UserRole } from "../users/user.interface";
 
 const router = express.Router();
 
@@ -17,6 +19,6 @@ router.post("/logout", AuthController.logout);
 // Reset password (only logged-in users)
 router.post("/change-password", authGuard(UserRole.ADMIN, UserRole.GUIDE, UserRole.TOURIST), AuthController.changePassword);
 
- 
+
 
 export const AuthRoutes = router;

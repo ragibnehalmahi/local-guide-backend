@@ -1,3 +1,5 @@
+//local-guide-backend\src\app\modules\payments\payment.validation.ts    
+
 import { z } from "zod";
 
 export const initPaymentSchema = z.object({
