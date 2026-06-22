@@ -18,7 +18,7 @@ const createApp = () => {
     app.use((0, helmet_1.default)());
     // CORS
     app.use((0, cors_1.default)({
-        origin: process.env.FRONTEND_URL || "http://localhost:3000",
+        origin: process.env.FRONTEND_URL || "https://local-guide-frontend-assignment.vercel.app",
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
